@@ -3,24 +3,18 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Mi Momento es un gestor personal de devocionales, oraciones y reflexiones dentro del ecosistema Neuronova Apps.">
+  <meta name="description" content="Mi Momento es una experiencia de devocionales, oración y reflexión personal dentro del ecosistema Neuronova Apps.">
   <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
   <meta name="application-name" content="Mi Momento">
-  <meta name="theme-color" content="#07111f">
+  <meta name="theme-color" content="#f6f3e9">
   <link rel="canonical" href="https://neuronova-apps.github.io/devocional-app/">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="es_PE">
   <meta property="og:site_name" content="Neuronova Apps">
-  <meta property="og:title" content="Mi Momento | Devocionales y oraciones">
-  <meta property="og:description" content="Organiza devocionales, oraciones, peticiones, reflexiones y tu recorrido personal en un mismo espacio.">
+  <meta property="og:title" content="Mi Momento | Devocionales y oración">
+  <meta property="og:description" content="Un espacio para detenerte, orar, reflexionar y conservar tu recorrido personal.">
   <meta property="og:url" content="https://neuronova-apps.github.io/devocional-app/">
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Mi Momento | Devocionales y oraciones">
-  <meta name="twitter:description" content="Un espacio personal para devocionales, oración y reflexión.">
-  <title>Mi Momento | Devocionales y oraciones</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <title>Mi Momento | Neuronova Apps</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="https://neuronova-apps.github.io/assets/accessibility/accessibility.css">
   <script src="https://neuronova-apps.github.io/assets/accessibility/accessibility.js" defer></script>
@@ -34,10 +28,10 @@
   <header class="site-header">
     <div class="container header-inner">
       <a class="brand" href="#inicio" aria-label="Mi Momento, ir al inicio" data-nav="home">
-        <span class="brand-mark" aria-hidden="true">M</span>
-        <span class="brand-copy"><strong>Mi Momento</strong><small>by Neuronova Apps</small></span>
+        <span class="brand-mark" aria-hidden="true">MM</span>
+        <span><strong>Mi Momento</strong><small>by Neuronova Apps</small></span>
       </a>
-      <nav class="header-nav" aria-label="Navegación del sitio">
+      <nav aria-label="Navegación principal">
         <button type="button" data-nav="devotionals">Devocionales</button>
         <button type="button" data-nav="prayers">Oraciones</button>
         <button type="button" data-nav="journal">Diario</button>
@@ -46,130 +40,127 @@
     </div>
   </header>
 
-  <main id="contenido" class="web-main">
-    <section class="web-intro container" id="inicio" aria-labelledby="webTitle">
-      <div class="intro-copy">
-        <p class="web-eyebrow"><span></span> Devocionales · Oración · Reflexión</p>
-        <h1 id="webTitle">Un espacio personal para <em>detenerte, orar y continuar.</em></h1>
-        <p>Mi Momento organiza la experiencia devocional diaria sin convertirla en una competencia. Puedes registrar peticiones, conservar reflexiones y seguir tu recorrido desde un mismo lugar.</p>
-      </div>
-      <div class="intro-signals" aria-label="Principios de la aplicación">
-        <span>Privado</span><span>Personal</span><span>Accesible</span><span>Progresivo</span>
+  <main id="contenido">
+    <section id="inicio" class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow"><span aria-hidden="true"></span> Devocionales · Oración · Reflexión</p>
+          <h1>Un momento para detenerte, conversar con Dios y <em>continuar con propósito.</em></h1>
+          <p class="lead">Mi Momento reúne devocionales breves, peticiones personales, reflexiones y seguimiento espiritual en una experiencia sencilla y privada. El contenido actual es demostrativo mientras se construye la biblioteca definitiva.</p>
+          <div class="actions">
+            <button class="button primary" type="button" data-open-devotional="1">Comenzar momento de hoy</button>
+            <button class="button secondary" type="button" data-nav="prayers">Registrar una oración</button>
+          </div>
+          <div class="signals" aria-label="Características previstas">
+            <span>Devocionales</span><span>Oraciones</span><span>Diario</span><span>Progreso</span><span>Accesible</span>
+          </div>
+        </div>
+
+        <div class="hero-visual" aria-hidden="true">
+          <div class="dev-orbit dev-orbit-outer">
+            <span class="dev-node node-top"><b>LEER</b></span>
+            <span class="dev-node node-right"><b>ORAR</b></span>
+            <span class="dev-node node-bottom"><b>REFLEXIONAR</b></span>
+            <span class="dev-node node-left"><b>AGRADECER</b></span>
+          </div>
+          <div class="dev-orbit dev-orbit-inner">
+            <span class="dev-chip chip-top"><b>HOY</b></span>
+            <span class="dev-chip chip-right"><b>PAZ</b></span>
+            <span class="dev-chip chip-left"><b>FE</b></span>
+          </div>
+          <div class="dev-core"><span>✦</span><strong>MM</strong><small>MI MOMENTO</small></div>
+        </div>
       </div>
     </section>
 
-    <section class="workspace-wrap container" aria-label="Aplicación Mi Momento">
-      <aside class="side-panel" aria-label="Navegación principal">
-        <div class="side-brand">
-          <span class="side-symbol" aria-hidden="true">✦</span>
-          <div><strong>Tu espacio</strong><small>Devocional personal</small></div>
+    <section class="section app-section" aria-label="Aplicación Mi Momento">
+      <div class="container app-panel">
+        <div class="app-panel-head">
+          <div><p class="eyebrow">Experiencia personal</p><h2>Todo tu recorrido, en un mismo espacio.</h2><p>Explora esta versión demostrativa. Los registros personales se guardan localmente en tu navegador.</p></div>
+          <span class="status">En desarrollo</span>
         </div>
-        <nav class="side-nav">
-          <button class="nav-item active" data-nav="home"><span>⌂</span><b>Inicio</b></button>
-          <button class="nav-item" data-nav="devotionals"><span>◇</span><b>Devocionales</b></button>
-          <button class="nav-item" data-nav="prayers"><span>♡</span><b>Oraciones</b></button>
-          <button class="nav-item" data-nav="journal"><span>✎</span><b>Diario</b></button>
-          <button class="nav-item" data-nav="progress"><span>◔</span><b>Progreso</b></button>
+
+        <nav class="app-tabs" aria-label="Secciones de Mi Momento">
+          <button class="nav-item active" data-nav="home">Inicio</button>
+          <button class="nav-item" data-nav="devotionals">Devocionales</button>
+          <button class="nav-item" data-nav="prayers">Oraciones</button>
+          <button class="nav-item" data-nav="journal">Diario</button>
+          <button class="nav-item" data-nav="progress">Progreso</button>
         </nav>
-        <div class="side-note">
-          <span>Privacidad</span>
-          <p>Tus registros de esta demostración se guardan únicamente en este navegador.</p>
-        </div>
-      </aside>
 
-      <div class="app-shell">
-        <header class="topbar">
-          <div>
-            <p class="eyebrow" id="dateLabel">Domingo</p>
-            <h2 id="greeting">Buenas noches</h2>
-          </div>
-          <button class="icon-button profile-button" aria-label="Abrir perfil" id="profileBtn"><span>GB</span></button>
-        </header>
+        <div class="app-shell">
+          <header class="topbar">
+            <div><p class="eyebrow" id="dateLabel">Domingo</p><h2 id="greeting">Buenas noches</h2></div>
+            <button class="icon-button" id="profileBtn" aria-label="Abrir perfil">GB</button>
+          </header>
 
-        <div class="app-content">
-          <section class="screen active" id="homeScreen">
-            <div class="home-grid">
-              <article class="hero-card">
-                <div class="hero-badge">Tu momento de hoy</div>
-                <h2>Cuando necesito paciencia</h2>
-                <p class="verse">"Todo tiene su tiempo, y todo lo que se quiere debajo del cielo tiene su hora."</p>
-                <p class="verse-ref">Eclesiastés 3:1</p>
-                <button class="primary-button" data-open-devotional="1">Comenzar devocional</button>
-              </article>
-
-              <div class="home-side">
-                <div class="section-heading first-heading">
-                  <div><span class="eyebrow">Tu camino</span><h3>Hoy puedes continuar</h3></div>
-                </div>
-                <div class="stats-grid">
-                  <article class="stat-card"><span class="stat-icon">✦</span><strong id="activePrayerCount">6</strong><span>Oraciones activas</span></article>
-                  <article class="stat-card"><span class="stat-icon">✓</span><strong id="answeredCount">14</strong><span>Respondidas</span></article>
-                  <article class="stat-card wide">
-                    <div><span class="eyebrow">Racha</span><strong><span id="streakCount">8</span> días</strong></div>
-                    <div class="mini-days" aria-label="Actividad semanal"><span class="done">L</span><span class="done">M</span><span class="done">M</span><span class="done">J</span><span class="done">V</span><span class="done">S</span><span class="today">D</span></div>
-                  </article>
+          <div class="app-content">
+            <section class="screen active" id="homeScreen">
+              <div class="home-grid">
+                <article class="daily-card">
+                  <span class="daily-label">Tu momento de hoy</span>
+                  <h2>Cuando necesito paciencia</h2>
+                  <p class="verse">"Todo tiene su tiempo, y todo lo que se quiere debajo del cielo tiene su hora."</p>
+                  <p class="verse-ref">Eclesiastés 3:1</p>
+                  <button class="button primary light" data-open-devotional="1">Comenzar devocional</button>
+                </article>
+                <div class="today-summary">
+                  <p class="eyebrow">Tu camino</p><h3>Hoy puedes continuar</h3>
+                  <div class="stats-grid">
+                    <article><strong id="activePrayerCount">6</strong><span>Oraciones activas</span></article>
+                    <article><strong id="answeredCount">14</strong><span>Respondidas</span></article>
+                    <article class="wide"><strong><span id="streakCount">8</span> días</strong><span>Racha actual</span></article>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div class="section-heading"><div><span class="eyebrow">Planes</span><h3>Devocionales sugeridos</h3></div><button class="text-button" data-nav="devotionals">Ver todos</button></div>
-            <div class="horizontal-list">
-              <article class="plan-card warm"><span class="plan-tag">7 días</span><h4>Volver a la calma</h4><p>Una pausa diaria para ordenar pensamientos y recuperar serenidad.</p><button class="secondary-button" data-open-plan="calma">Explorar</button></article>
-              <article class="plan-card green"><span class="plan-tag">14 días</span><h4>Gratitud cotidiana</h4><p>Aprende a reconocer lo bueno incluso en días difíciles.</p><button class="secondary-button" data-open-plan="gratitud">Explorar</button></article>
-            </div>
-            <article class="quick-prayer-card"><div><span class="eyebrow">Oración rápida</span><h3>¿Qué quieres presentar hoy?</h3></div><button class="floating-add" id="quickPrayerBtn" aria-label="Nueva oración">+</button></article>
-          </section>
+              <div class="section-heading"><div><p class="eyebrow">Planes</p><h3>Devocionales sugeridos</h3></div><button class="text-button" data-nav="devotionals">Ver todos</button></div>
+              <div class="plan-grid">
+                <article class="plan-card"><span>7 días · Paz</span><h3>Volver a la calma</h3><p>Una pausa diaria para ordenar pensamientos y recuperar serenidad.</p><button class="small-button" data-open-plan="calma">Explorar</button></article>
+                <article class="plan-card"><span>14 días · Gratitud</span><h3>Gratitud cotidiana</h3><p>Una práctica sencilla para reconocer lo recibido incluso en días difíciles.</p><button class="small-button" data-open-plan="gratitud">Explorar</button></article>
+                <article class="plan-card"><span>10 días · Familia</span><h3>Orar por los míos</h3><p>Reflexiones para acompañar, cuidar y agradecer por la familia.</p><button class="small-button" data-open-plan="familia">Explorar</button></article>
+              </div>
+              <article class="quick-card"><div><p class="eyebrow">Oración rápida</p><h3>¿Qué quieres presentar hoy?</h3></div><button class="floating-add" id="quickPrayerBtn" aria-label="Nueva oración">+</button></article>
+            </section>
 
-          <section class="screen" id="devotionalsScreen">
-            <div class="page-title"><span class="eyebrow">Biblioteca</span><h2>Devocionales</h2><p>Planes cortos para acompañar distintos momentos de la vida.</p></div>
-            <div class="filter-row" id="devotionalFilters"><button class="chip active" data-filter="todos">Todos</button><button class="chip" data-filter="paz">Paz</button><button class="chip" data-filter="gratitud">Gratitud</button><button class="chip" data-filter="familia">Familia</button><button class="chip" data-filter="proposito">Propósito</button></div>
-            <div class="devotional-list" id="devotionalList">
-              <article class="devotional-item" data-category="paz"><div class="cover cover-1">01</div><div class="devotional-copy"><span>7 días · Paz</span><h3>Volver a la calma</h3><p>Respirar, reflexionar y volver a centrarte en lo esencial.</p><div class="progress-line"><span style="width:43%"></span></div></div><button class="icon-button small" data-open-plan="calma">›</button></article>
-              <article class="devotional-item" data-category="gratitud"><div class="cover cover-2">02</div><div class="devotional-copy"><span>14 días · Gratitud</span><h3>Gratitud cotidiana</h3><p>Una práctica sencilla para reconocer lo recibido.</p><div class="progress-line"><span style="width:18%"></span></div></div><button class="icon-button small" data-open-plan="gratitud">›</button></article>
-              <article class="devotional-item" data-category="familia"><div class="cover cover-3">03</div><div class="devotional-copy"><span>10 días · Familia</span><h3>Orar por los míos</h3><p>Reflexiones para acompañar, cuidar y agradecer por la familia.</p><div class="progress-line"><span style="width:0%"></span></div></div><button class="icon-button small" data-open-plan="familia">›</button></article>
-              <article class="devotional-item" data-category="proposito"><div class="cover cover-4">04</div><div class="devotional-copy"><span>21 días · Propósito</span><h3>Caminar con propósito</h3><p>Decisiones, paciencia y sentido para los próximos pasos.</p><div class="progress-line"><span style="width:0%"></span></div></div><button class="icon-button small" data-open-plan="proposito">›</button></article>
-            </div>
-          </section>
+            <section class="screen" id="devotionalsScreen">
+              <div class="page-title"><p class="eyebrow">Biblioteca</p><h2>Devocionales</h2><p>Planes de demostración para acompañar distintos momentos de la vida.</p></div>
+              <div class="filter-row" id="devotionalFilters"><button class="chip active" data-filter="todos">Todos</button><button class="chip" data-filter="paz">Paz</button><button class="chip" data-filter="gratitud">Gratitud</button><button class="chip" data-filter="familia">Familia</button><button class="chip" data-filter="proposito">Propósito</button></div>
+              <div class="devotional-list" id="devotionalList">
+                <article class="devotional-item" data-category="paz"><div class="cover">01</div><div><span>7 días · Paz</span><h3>Volver a la calma</h3><p>Respirar, reflexionar y volver a centrarte en lo esencial.</p><div class="progress-line"><span style="width:43%"></span></div></div><button class="icon-button small" data-open-plan="calma">›</button></article>
+                <article class="devotional-item" data-category="gratitud"><div class="cover">02</div><div><span>14 días · Gratitud</span><h3>Gratitud cotidiana</h3><p>Reconocer lo recibido y cerrar el día con una mirada agradecida.</p><div class="progress-line"><span style="width:18%"></span></div></div><button class="icon-button small" data-open-plan="gratitud">›</button></article>
+                <article class="devotional-item" data-category="familia"><div class="cover">03</div><div><span>10 días · Familia</span><h3>Orar por los míos</h3><p>Acompañar, cuidar y agradecer por quienes forman parte de tu vida.</p><div class="progress-line"><span style="width:0%"></span></div></div><button class="icon-button small" data-open-plan="familia">›</button></article>
+                <article class="devotional-item" data-category="proposito"><div class="cover">04</div><div><span>21 días · Propósito</span><h3>Caminar con propósito</h3><p>Decisiones, paciencia y sentido para los próximos pasos.</p><div class="progress-line"><span style="width:0%"></span></div></div><button class="icon-button small" data-open-plan="proposito">›</button></article>
+              </div>
+            </section>
 
-          <section class="screen" id="prayersScreen">
-            <div class="page-title with-action"><div><span class="eyebrow">Mi espacio</span><h2>Oraciones</h2><p>Registra peticiones, cambios y respuestas a lo largo del tiempo.</p></div><button class="floating-add" id="newPrayerBtn" aria-label="Registrar nueva oración">+</button></div>
-            <div class="segmented" id="prayerTabs"><button class="active" data-prayer-tab="active">Activas</button><button data-prayer-tab="answered">Respondidas</button></div>
-            <div class="prayer-list" id="prayerList"></div>
-          </section>
+            <section class="screen" id="prayersScreen">
+              <div class="page-title with-action"><div><p class="eyebrow">Mi espacio</p><h2>Oraciones</h2><p>Registra peticiones, cambios y respuestas a lo largo del tiempo.</p></div><button class="floating-add" id="newPrayerBtn" aria-label="Nueva oración">+</button></div>
+              <div class="segmented" id="prayerTabs"><button class="active" data-prayer-tab="active">Activas</button><button data-prayer-tab="answered">Respondidas</button></div>
+              <div class="prayer-list" id="prayerList"></div>
+            </section>
 
-          <section class="screen" id="journalScreen">
-            <div class="page-title"><span class="eyebrow">Reflexiona</span><h2>Mi diario</h2><p>Un lugar privado para guardar pensamientos, aprendizajes y agradecimientos.</p></div>
-            <article class="journal-compose"><label for="journalText">¿Qué quieres recordar de hoy?</label><textarea id="journalText" maxlength="600" placeholder="Escribe con libertad..."></textarea><div class="compose-footer"><span id="charCount">0/600</span><button class="primary-button compact" id="saveJournalBtn">Guardar reflexión</button></div></article>
-            <div class="section-heading"><div><span class="eyebrow">Recientes</span><h3>Entradas anteriores</h3></div></div>
-            <div class="journal-list" id="journalList"></div>
-          </section>
+            <section class="screen" id="journalScreen">
+              <div class="page-title"><p class="eyebrow">Reflexiona</p><h2>Mi diario</h2><p>Un espacio privado para pensamientos, aprendizajes y agradecimientos.</p></div>
+              <article class="journal-compose"><label for="journalText">¿Qué quieres recordar de hoy?</label><textarea id="journalText" maxlength="600" placeholder="Escribe con libertad..."></textarea><div class="compose-footer"><span id="charCount">0/600</span><button class="button primary compact" id="saveJournalBtn">Guardar reflexión</button></div></article>
+              <div class="section-heading"><div><p class="eyebrow">Recientes</p><h3>Entradas anteriores</h3></div></div><div class="journal-list" id="journalList"></div>
+            </section>
 
-          <section class="screen" id="progressScreen">
-            <div class="page-title"><span class="eyebrow">Tu recorrido</span><h2>Progreso</h2><p>No se trata de competir. Se trata de volver, continuar y reconocer tu camino.</p></div>
-            <article class="progress-hero"><div class="progress-ring" style="--value:72"><div><strong>72%</strong><span>este mes</span></div></div><div><span class="eyebrow">Agosto</span><h3>18 momentos dedicados</h3><p>Has tenido actividad en 18 de los últimos 25 días registrados.</p></div></article>
-            <div class="metric-list"><article><span>Devocionales completados</span><strong>9</strong></article><article><span>Reflexiones escritas</span><strong id="journalMetric">12</strong></article><article><span>Oraciones registradas</span><strong id="prayerMetric">20</strong></article><article><span>Oraciones respondidas</span><strong id="answeredMetric">14</strong></article></div>
-            <article class="calendar-card"><div class="section-heading compact-heading"><div><span class="eyebrow">Actividad</span><h3>Últimas 4 semanas</h3></div></div><div class="activity-grid" aria-label="Calendario de actividad"><span class="level-3"></span><span></span><span class="level-1"></span><span class="level-2"></span><span class="level-3"></span><span></span><span class="level-1"></span><span class="level-2"></span><span class="level-3"></span><span></span><span class="level-2"></span><span class="level-1"></span><span class="level-3"></span><span class="level-2"></span><span></span><span class="level-1"></span><span class="level-3"></span><span class="level-2"></span><span class="level-2"></span><span></span><span class="level-3"></span><span class="level-1"></span><span class="level-3"></span><span class="level-2"></span><span></span><span class="level-2"></span><span class="level-3"></span><span class="level-3"></span></div></article>
-          </section>
+            <section class="screen" id="progressScreen">
+              <div class="page-title"><p class="eyebrow">Tu recorrido</p><h2>Progreso</h2><p>Una referencia personal de constancia, no una competencia.</p></div>
+              <article class="progress-hero"><div class="progress-ring" style="--value:72"><div><strong>72%</strong><span>este mes</span></div></div><div><p class="eyebrow">Agosto</p><h3>18 momentos dedicados</h3><p>Actividad registrada en 18 de los últimos 25 días de demostración.</p></div></article>
+              <div class="metric-list"><article><span>Devocionales completados</span><strong>9</strong></article><article><span>Reflexiones escritas</span><strong id="journalMetric">12</strong></article><article><span>Oraciones registradas</span><strong id="prayerMetric">20</strong></article><article><span>Respondidas</span><strong id="answeredMetric">14</strong></article></div>
+              <article class="calendar-card"><p class="eyebrow">Actividad</p><h3>Últimas 4 semanas</h3><div class="activity-grid" aria-label="Actividad demostrativa">${'<span></span>'.repeat(28)}</div></article>
+            </section>
+          </div>
         </div>
-
-        <nav class="bottom-nav" aria-label="Navegación móvil">
-          <button class="nav-item active" data-nav="home"><span>⌂</span><small>Inicio</small></button>
-          <button class="nav-item" data-nav="devotionals"><span>◇</span><small>Devocionales</small></button>
-          <button class="nav-item" data-nav="prayers"><span>♡</span><small>Oraciones</small></button>
-          <button class="nav-item" data-nav="journal"><span>✎</span><small>Diario</small></button>
-          <button class="nav-item" data-nav="progress"><span>◔</span><small>Progreso</small></button>
-        </nav>
       </div>
     </section>
   </main>
 
   <footer class="site-footer">
-    <div class="container footer-grid">
-      <div class="footer-brand"><a class="brand" href="#inicio" data-nav="home"><span class="brand-mark" aria-hidden="true">M</span><span class="brand-copy"><strong>Mi Momento</strong><small>Neuronova Apps</small></span></a><p>Un proyecto personal para organizar devocionales, oraciones y reflexiones desde una experiencia digital privada y accesible.</p></div>
-      <div class="footer-column"><h2>Explorar</h2><button data-nav="devotionals">Devocionales</button><button data-nav="prayers">Oraciones</button><button data-nav="journal">Diario</button><button data-nav="progress">Progreso</button></div>
-      <div class="footer-column"><h2>Ecosistema</h2><a href="https://neuronova-apps.github.io/">Neuronova Apps</a><a href="https://github.com/neuronova-apps/devocional-app" target="_blank" rel="noopener noreferrer">GitHub</a><span>Proyecto en desarrollo</span></div>
-    </div>
-    <div class="container footer-bottom"><p>© <span id="year">2026</span> Mi Momento · Neuronova Apps</p><p>Devocionales · Privacidad · Accesibilidad</p></div>
+    <div class="container footer-grid"><div><strong>Mi Momento</strong><p>Proyecto de Neuronova Apps en desarrollo.</p></div><div><a href="https://github.com/neuronova-apps/devocional-app" target="_blank" rel="noopener noreferrer">GitHub</a><a href="https://neuronova-apps.github.io/">Neuronova Apps</a></div></div>
+    <div class="container footer-bottom">© 2026 Mi Momento · Neuronova Apps</div>
   </footer>
 
   <div class="modal-backdrop" id="modalBackdrop" hidden><section class="modal" id="modalContent" role="dialog" aria-modal="true" aria-labelledby="modalTitle"></section></div>
