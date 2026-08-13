@@ -47,8 +47,6 @@ document.addEventListener('click', (event) => {
   if (devotional) openTodayDevotional();
 });
 
-document.querySelectorAll('.nav-item').forEach(btn => btn.addEventListener('click', () => navigate(btn.dataset.nav)));
-
 function setDateGreeting() {
   const now = new Date();
   const hour = now.getHours();
@@ -88,7 +86,7 @@ function openTodayDevotional() {
     <div class="devotional-step"><strong>Reflexiona</strong><span>La paciencia no siempre consiste en esperar sin hacer nada. A veces significa respetar procesos que todavía no podemos acelerar.</span></div>
     <div class="devotional-step"><strong>Pregúntate</strong><span>¿Qué situación estoy intentando apresurar y qué podría hacer hoy con mayor serenidad?</span></div>
     <div class="devotional-step"><strong>Ora</strong><span>Escribe con tus propias palabras aquello que deseas presentar hoy.</span></div>
-    <button class="primary-button" style="width:100%;background:var(--primary);color:white" onclick="completeDevotional()">Marcar como completado</button>
+    <button class="button primary modal-action" onclick="completeDevotional()">Marcar como completado</button>
   `);
 }
 
@@ -115,7 +113,7 @@ function openPlan(key) {
     <div class="devotional-step"><strong>Día 2</strong><span>Nombrar aquello que ocupa mi mente.</span></div>
     <div class="devotional-step"><strong>Día 3</strong><span>Volver a lo que sí puedo hacer hoy.</span></div>
     <p>En la versión final, cada día podría incluir lectura, reflexión, pregunta personal, oración y registro en el diario.</p>
-    <button class="primary-button" style="width:100%;background:var(--primary);color:white" onclick="closeModal();showToast('Plan guardado en tu biblioteca')">Guardar plan</button>
+    <button class="button primary modal-action" onclick="closeModal();showToast('Plan guardado en tu biblioteca')">Guardar plan</button>
   `);
 }
 
@@ -131,7 +129,7 @@ function openPrayerForm() {
       <select id="prayerCategory"><option>Personal</option><option>Familia</option><option>Salud</option><option>Estudios</option><option>Trabajo</option><option>Decisiones</option><option>Gratitud</option></select>
       <label>Petición o reflexión</label>
       <textarea id="prayerText" required placeholder="Escribe con tus propias palabras..."></textarea>
-      <button class="primary-button" type="submit" style="background:var(--primary);color:white">Guardar oración</button>
+      <button class="button primary modal-action" type="submit">Guardar oración</button>
     </form>
   `);
   document.getElementById('prayerForm').addEventListener('submit', e => {
@@ -198,7 +196,7 @@ function addPrayerNote(id) {
     <h2 id="modalTitle">${escapeHtml(p.title)}</h2>
     <p>En una versión completa, aquí aparecería una línea de tiempo con notas, fechas, cambios y textos asociados a esta petición.</p>
     <div class="devotional-step"><strong>Hoy</strong><span>Puedes añadir una observación sobre cómo ha cambiado la situación.</span></div>
-    <button class="primary-button" style="width:100%;background:var(--primary);color:white" onclick="closeModal();showToast('Nota de seguimiento simulada')">Añadir nota</button>
+    <button class="button primary modal-action" onclick="closeModal();showToast('Nota de seguimiento simulada')">Añadir nota</button>
   `);
 }
 
@@ -231,7 +229,7 @@ function updateMetrics() {
 document.querySelectorAll('#devotionalFilters .chip').forEach(btn => btn.addEventListener('click', () => {
   document.querySelectorAll('#devotionalFilters .chip').forEach(b => b.classList.toggle('active', b === btn));
   const filter = btn.dataset.filter;
-  document.querySelectorAll('.devotional-item').forEach(item => item.style.display = filter === 'todos' || item.dataset.category === filter ? 'flex' : 'none');
+  document.querySelectorAll('.devotional-item').forEach(item => item.style.display = filter === 'todos' || item.dataset.category === filter ? '' : 'none');
 }));
 
 document.getElementById('profileBtn').addEventListener('click', () => openModal(`
@@ -241,7 +239,7 @@ document.getElementById('profileBtn').addEventListener('click', () => openModal(
   <p>La propuesta contempla ajustes de recordatorios, tamaño de texto, apariencia, privacidad, copia de seguridad y preferencias de contenido.</p>
   <div class="devotional-step"><strong>Privacidad por diseño</strong><span>Las oraciones y reflexiones personales deberían mantenerse privadas por defecto.</span></div>
   <div class="devotional-step"><strong>Accesibilidad</strong><span>Tamaño de texto, contraste, lectura sencilla y controles claros desde la primera versión.</span></div>
-  <button class="primary-button" style="width:100%;background:var(--primary);color:white" onclick="closeModal()">Cerrar</button>
+  <button class="button primary modal-action" onclick="closeModal()">Cerrar</button>
 `));
 
 function escapeHtml(value='') {
