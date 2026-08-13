@@ -24,6 +24,7 @@ La versión web funciona como demostración visual y funcional previa a una futu
 - `app.js`: navegación, modales, filtros, formularios y persistencia local.
 - `privacy/index.html`: política de privacidad.
 - `privacy/styles.css`: estilos específicos de la política de privacidad.
+- `sitemap.xml`: rutas públicas indexables del proyecto.
 - `.nojekyll`: publicación directa de archivos estáticos en GitHub Pages.
 
 ## Accesibilidad
