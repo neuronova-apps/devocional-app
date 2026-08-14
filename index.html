@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Mi Momento es una demo web funcional de devocionales, oración y reflexión personal: oraciones y diario se guardan localmente; planes y progreso devocional siguen siendo demostrativos.">
+  <meta name="description" content="Mi Momento es una demo web funcional de devocionales, oración y reflexión personal con progreso devocional, oraciones y diario guardados localmente.">
   <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
   <meta name="application-name" content="Mi Momento">
   <meta name="theme-color" content="#f6f3e9">
@@ -13,7 +13,7 @@
   <meta property="og:locale" content="es_PE">
   <meta property="og:site_name" content="Neuronova Apps">
   <meta property="og:title" content="Mi Momento | Devocionales y oración">
-  <meta property="og:description" content="Demo web funcional: registra oraciones y reflexiones localmente y explora contenido devocional demostrativo.">
+  <meta property="og:description" content="Demo web funcional con progreso devocional, oraciones y reflexiones guardados localmente en el navegador.">
   <meta property="og:url" content="https://neuronova-apps.github.io/mimomento-app/">
   <meta property="og:image" content="https://neuronova-apps.github.io/mimomento-app/favicon.svg">
   <meta property="og:image:type" content="image/svg+xml">
@@ -22,7 +22,7 @@
   <meta property="og:image:alt" content="Símbolo de Mi Momento">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Mi Momento | Devocionales y oración">
-  <meta name="twitter:description" content="Demo funcional con oraciones y diario locales; planes y progreso devocional aún son demostrativos.">
+  <meta name="twitter:description" content="Demo funcional con progreso devocional, oraciones y diario guardados localmente.">
   <meta name="twitter:image" content="https://neuronova-apps.github.io/mimomento-app/favicon.svg">
   <meta name="twitter:image:alt" content="Símbolo de Mi Momento">
   <title>Mi Momento | Neuronova Apps</title>
@@ -59,13 +59,13 @@
         <div class="hero-copy">
           <p class="eyebrow"><span aria-hidden="true"></span> Devocionales · Oración · Reflexión</p>
           <h1>Un momento para detenerte, conversar con Dios y <em>continuar con propósito.</em></h1>
-          <p class="lead">Mi Momento es una demo web funcional. Puedes crear oraciones y reflexiones que se guardan localmente en este navegador. La biblioteca devocional, la finalización de planes, las notas de seguimiento y el progreso espiritual todavía son contenido o interacciones demostrativas.</p>
+          <p class="lead">Mi Momento es una demo web funcional. Puedes completar el devocional de muestra, avanzar por las sesiones disponibles de los planes y conservar ese progreso junto con tus oraciones y reflexiones en este navegador. La biblioteca completa y varias funciones de seguimiento todavía están en desarrollo.</p>
           <div class="actions">
-            <button class="button primary" type="button" data-open-devotional="1">Explorar devocional de muestra</button>
+            <button class="button primary" type="button" data-open-devotional="1">Ir al devocional de hoy</button>
             <button class="button secondary" type="button" data-nav="prayers">Registrar una oración</button>
           </div>
           <div class="signals" aria-label="Estado actual de las funciones de Mi Momento">
-            <span>Devocionales demo</span><span>Oraciones locales</span><span>Diario local</span><span>Progreso demo</span><span>Base A11Y</span>
+            <span>Progreso local</span><span>Oraciones locales</span><span>Diario local</span><span>Planes de muestra</span><span>Base A11Y</span>
           </div>
         </div>
 
@@ -89,7 +89,7 @@
     <section class="section app-section" aria-label="Aplicación Mi Momento">
       <div class="container app-panel">
         <div class="app-panel-head">
-          <div><p class="eyebrow">Demo web funcional</p><h2>Prueba el registro local sin confundirlo con un historial completo.</h2><p>Las oraciones y reflexiones que creas se conservan localmente. Los registros precargados se muestran como ejemplos y no cuentan como actividad personal; el progreso devocional real todavía no está implementado.</p></div>
+          <div><p class="eyebrow">Demo web funcional</p><h2>Registros y progreso derivados de acciones reales.</h2><p>Las oraciones, reflexiones y acciones devocionales que completas se conservan localmente. Los ejemplos precargados no cuentan como actividad personal y los planes solo miden las tres sesiones que existen actualmente en la demo.</p></div>
           <span class="status">Demo web</span>
         </div>
 
@@ -111,39 +111,39 @@
             <section class="screen active" id="homeScreen">
               <div class="home-grid">
                 <article class="daily-card">
-                  <span class="daily-label">Devocional demostrativo de hoy</span>
+                  <span class="daily-label" id="dailyDevotionalLabel">Devocional de muestra de hoy</span>
                   <h2>Cuando necesito paciencia</h2>
                   <p class="verse">"Todo tiene su tiempo, y todo lo que se quiere debajo del cielo tiene su hora."</p>
                   <p class="verse-ref">Eclesiastés 3:1</p>
-                  <button class="button primary light" data-open-devotional="1">Explorar devocional</button>
+                  <button class="button primary light" id="dailyDevotionalButton" data-open-devotional="1">Comenzar devocional</button>
                 </article>
                 <div class="today-summary">
                   <p class="eyebrow">Tus registros locales</p><h3>Actividad creada por ti en esta demo</h3>
                   <div class="stats-grid">
                     <article><strong id="activePrayerCount">0</strong><span>Tus oraciones activas</span></article>
                     <article><strong id="answeredCount">0</strong><span>Tus respondidas</span></article>
-                    <article class="wide"><strong>—</strong><span>Racha todavía no calculada</span></article>
+                    <article class="wide"><strong><span id="streakCount">0</span> días</strong><span>Racha devocional actual</span></article>
                   </div>
                 </div>
               </div>
 
-              <div class="section-heading"><div><p class="eyebrow">Planes de muestra</p><h3>Devocionales sugeridos</h3></div><button class="text-button" data-nav="devotionals">Ver todos</button></div>
+              <div class="section-heading"><div><p class="eyebrow">Planes de muestra</p><h3>Sesiones con progreso local</h3></div><button class="text-button" data-nav="devotionals">Ver todos</button></div>
               <div class="plan-grid">
-                <article class="plan-card"><span>7 días · Paz · demo</span><h3>Volver a la calma</h3><p>Una pausa diaria para ordenar pensamientos y recuperar serenidad.</p><button class="small-button" data-open-plan="calma">Explorar</button></article>
-                <article class="plan-card"><span>14 días · Gratitud · demo</span><h3>Gratitud cotidiana</h3><p>Una práctica sencilla para reconocer lo recibido incluso en días difíciles.</p><button class="small-button" data-open-plan="gratitud">Explorar</button></article>
-                <article class="plan-card"><span>10 días · Familia · demo</span><h3>Orar por los míos</h3><p>Reflexiones para acompañar, cuidar y agradecer por la familia.</p><button class="small-button" data-open-plan="familia">Explorar</button></article>
+                <article class="plan-card"><span id="homePlan-calma">0/3 sesiones · 7 días</span><h3>Volver a la calma</h3><p>Una pausa diaria para ordenar pensamientos y recuperar serenidad.</p><button class="small-button" data-open-plan="calma">Explorar</button></article>
+                <article class="plan-card"><span id="homePlan-gratitud">0/3 sesiones · 14 días</span><h3>Gratitud cotidiana</h3><p>Una práctica sencilla para reconocer lo recibido incluso en días difíciles.</p><button class="small-button" data-open-plan="gratitud">Explorar</button></article>
+                <article class="plan-card"><span id="homePlan-familia">0/3 sesiones · 10 días</span><h3>Orar por los míos</h3><p>Reflexiones para acompañar, cuidar y agradecer por la familia.</p><button class="small-button" data-open-plan="familia">Explorar</button></article>
               </div>
               <article class="quick-card"><div><p class="eyebrow">Oración local</p><h3>¿Qué quieres presentar hoy?</h3></div><button class="floating-add" id="quickPrayerBtn" aria-label="Nueva oración">+</button></article>
             </section>
 
             <section class="screen" id="devotionalsScreen">
-              <div class="page-title"><p class="eyebrow">Biblioteca demostrativa</p><h2>Devocionales</h2><p>Estos planes son muestras de interfaz y contenido. Su avance, finalización y guardado todavía no se registran como progreso personal.</p></div>
+              <div class="page-title"><p class="eyebrow">Biblioteca de muestra</p><h2>Devocionales</h2><p>Cada plan mantiene su duración conceptual, pero la demo publica solo tres sesiones utilizables. Completar esas sesiones sí actualiza tu progreso local; no se simulan los días de contenido que todavía no existen.</p></div>
               <div class="filter-row" id="devotionalFilters"><button class="chip active" data-filter="todos">Todos</button><button class="chip" data-filter="paz">Paz</button><button class="chip" data-filter="gratitud">Gratitud</button><button class="chip" data-filter="familia">Familia</button><button class="chip" data-filter="proposito">Propósito</button></div>
               <div class="devotional-list" id="devotionalList">
-                <article class="devotional-item" data-category="paz"><div class="cover">01</div><div><span>7 días · Paz · progreso no registrado</span><h3>Volver a la calma</h3><p>Respirar, reflexionar y volver a centrarte en lo esencial.</p><div class="progress-line"><span style="width:0%"></span></div></div><button class="icon-button small" data-open-plan="calma" aria-label="Explorar plan Volver a la calma">›</button></article>
-                <article class="devotional-item" data-category="gratitud"><div class="cover">02</div><div><span>14 días · Gratitud · progreso no registrado</span><h3>Gratitud cotidiana</h3><p>Reconocer lo recibido y cerrar el día con una mirada agradecida.</p><div class="progress-line"><span style="width:0%"></span></div></div><button class="icon-button small" data-open-plan="gratitud" aria-label="Explorar plan Gratitud cotidiana">›</button></article>
-                <article class="devotional-item" data-category="familia"><div class="cover">03</div><div><span>10 días · Familia · progreso no registrado</span><h3>Orar por los míos</h3><p>Acompañar, cuidar y agradecer por quienes forman parte de tu vida.</p><div class="progress-line"><span style="width:0%"></span></div></div><button class="icon-button small" data-open-plan="familia" aria-label="Explorar plan Orar por los míos">›</button></article>
-                <article class="devotional-item" data-category="proposito"><div class="cover">04</div><div><span>21 días · Propósito · progreso no registrado</span><h3>Caminar con propósito</h3><p>Decisiones, paciencia y sentido para los próximos pasos.</p><div class="progress-line"><span style="width:0%"></span></div></div><button class="icon-button small" data-open-plan="proposito" aria-label="Explorar plan Caminar con propósito">›</button></article>
+                <article class="devotional-item" data-category="paz"><div class="cover">01</div><div><span id="planStatus-calma">7 días · 0/3 sesiones disponibles</span><h3>Volver a la calma</h3><p>Respirar, reflexionar y volver a centrarte en lo esencial.</p><div class="progress-line" aria-hidden="true"><span id="planProgress-calma" style="width:0%"></span></div></div><button class="icon-button small" data-open-plan="calma" aria-label="Explorar plan Volver a la calma">›</button></article>
+                <article class="devotional-item" data-category="gratitud"><div class="cover">02</div><div><span id="planStatus-gratitud">14 días · 0/3 sesiones disponibles</span><h3>Gratitud cotidiana</h3><p>Reconocer lo recibido y cerrar el día con una mirada agradecida.</p><div class="progress-line" aria-hidden="true"><span id="planProgress-gratitud" style="width:0%"></span></div></div><button class="icon-button small" data-open-plan="gratitud" aria-label="Explorar plan Gratitud cotidiana">›</button></article>
+                <article class="devotional-item" data-category="familia"><div class="cover">03</div><div><span id="planStatus-familia">10 días · 0/3 sesiones disponibles</span><h3>Orar por los míos</h3><p>Acompañar, cuidar y agradecer por quienes forman parte de tu vida.</p><div class="progress-line" aria-hidden="true"><span id="planProgress-familia" style="width:0%"></span></div></div><button class="icon-button small" data-open-plan="familia" aria-label="Explorar plan Orar por los míos">›</button></article>
+                <article class="devotional-item" data-category="proposito"><div class="cover">04</div><div><span id="planStatus-proposito">21 días · 0/3 sesiones disponibles</span><h3>Caminar con propósito</h3><p>Decisiones, paciencia y sentido para los próximos pasos.</p><div class="progress-line" aria-hidden="true"><span id="planProgress-proposito" style="width:0%"></span></div></div><button class="icon-button small" data-open-plan="proposito" aria-label="Explorar plan Caminar con propósito">›</button></article>
               </div>
             </section>
 
@@ -160,10 +160,10 @@
             </section>
 
             <section class="screen" id="progressScreen">
-              <div class="page-title"><p class="eyebrow">Panel demostrativo</p><h2>Progreso</h2><p>El seguimiento devocional, las rachas y el calendario de actividad todavía no se calculan a partir de tus acciones. Los únicos contadores personales de esta pantalla se limitan a oraciones y reflexiones creadas por ti.</p></div>
-              <article class="progress-hero"><div class="progress-ring" style="--value:0"><div><strong>—</strong><span>sin cálculo</span></div></div><div><p class="eyebrow">Estado actual</p><h3>El progreso devocional real aún no está implementado</h3><p>La futura versión deberá registrar acciones reales antes de mostrar porcentajes, rachas o días de actividad.</p></div></article>
-              <div class="metric-list"><article><span>Devocionales completados</span><strong>—</strong></article><article><span>Tus reflexiones</span><strong id="journalMetric">0</strong></article><article><span>Tus oraciones</span><strong id="prayerMetric">0</strong></article><article><span>Tus respondidas</span><strong id="answeredMetric">0</strong></article></div>
-              <article class="calendar-card"><p class="eyebrow">Ejemplo visual</p><h3>Calendario de actividad todavía no conectado</h3><div class="activity-grid" aria-label="Calendario demostrativo; no representa actividad personal"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div></article>
+              <div class="page-title"><p class="eyebrow">Progreso local</p><h2>Progreso</h2><p>Esta pantalla se deriva únicamente de acciones devocionales completadas en la demo. No utiliza cifras precargadas ni suma ejemplos a tu historial.</p></div>
+              <article class="progress-hero"><div class="progress-ring" id="devotionalProgressRing" style="--value:0"><div><strong id="devotionalProgressPercent">0%</strong><span>planes disponibles</span></div></div><div><p class="eyebrow">Planes de muestra</p><h3 id="devotionalProgressTitle">0 de 12 sesiones de plan completadas</h3><p id="devotionalProgressSummary">El porcentaje usa únicamente las tres sesiones disponibles de cada plan de muestra. El devocional diario suma actividad, pero no altera este porcentaje.</p></div></article>
+              <div class="metric-list"><article><span>Sesiones devocionales</span><strong id="devotionalMetric">0</strong></article><article><span>Días con actividad</span><strong id="activityDaysMetric">0</strong></article><article><span>Tus reflexiones</span><strong id="journalMetric">0</strong></article><article><span>Tus oraciones</span><strong id="prayerMetric">0</strong></article></div>
+              <article class="calendar-card"><p class="eyebrow">Actividad real</p><h3>Últimos 28 días</h3><div class="activity-grid" id="activityGrid" aria-label="Actividad devocional real de los últimos 28 días"></div></article>
             </section>
           </div>
         </div>
