@@ -243,7 +243,8 @@ function normalizeJournalEntry(record) {
     id,
     date,
     text,
-    createdAt: normalizeCreatedAt(record.createdAt)
+    createdAt: normalizeCreatedAt(record.createdAt),
+    updatedAt: normalizeCreatedAt(record.updatedAt)
   };
 }
 
@@ -509,8 +510,8 @@ function renderDevotionalProgress() {
 }
 
 function navigate(target) {
-  Object.entries(screens).forEach(([key, el]) => el.classList.toggle('active', key === target));
-  document.querySelectorAll('.nav-item').forEach(btn => btn.classList.toggle('active', btn.dataset.nav === target));
+  Object.entries(screens).forEach(([key, element]) => element.classList.toggle('active', key === target));
+  document.querySelectorAll('.nav-item').forEach(button => button.classList.toggle('active', button.dataset.nav === target));
   window.scrollTo({ top: 0, behavior: 'smooth' });
   if (target === 'prayers') renderPrayers();
   if (target === 'journal') renderJournal();
@@ -671,7 +672,7 @@ function openPrayerForm() {
       title: document.getElementById('prayerTitle').value,
       category: document.getElementById('prayerCategory').value,
       text: document.getElementById('prayerText').value,
-      date: new Intl.DateTimeFormat('es-PE', { day: 'numeric', month: 'short', year: 'numeric' }).format(now),
+      date: formatStoredDate(now.toISOString()),
       status: 'active',
       createdAt: now.toISOString(),
       updatedAt: null,
@@ -917,9 +918,10 @@ document.getElementById('saveJournalBtn').addEventListener('click', () => {
   const now = new Date();
   const record = normalizeJournalEntry({
     id: Date.now(),
-    date: new Intl.DateTimeFormat('es-PE', { day: 'numeric', month: 'long', year: 'numeric' }).format(now),
+    date: formatStoredDate(now.toISOString()),
     text: journalText.value,
-    createdAt: now.toISOString()
+    createdAt: now.toISOString(),
+    updatedAt: null
   });
   if (!record) return showToast('Escribe una reflexión antes de guardar');
 
@@ -932,8 +934,105 @@ document.getElementById('saveJournalBtn').addEventListener('click', () => {
   showToast(persisted ? 'Reflexión guardada localmente' : 'Reflexión disponible solo durante esta sesión');
 });
 
+function journalCreatedLabel(entry) {
+  return formatStoredDate(entry.createdAt, entry.date || 'Sin fecha');
+}
+
+function findPersonalJournal(id) {
+  return personalJournals.find(entry => entry.id === Number(id)) || null;
+}
+
 function renderJournal() {
-  document.getElementById('journalList').innerHTML = visibleJournal().map(entry => `<article class="journal-entry"><time>${isDemoJournal(entry) ? 'Ejemplo de demostración · ' : ''}${escapeHtml(entry.date)}</time><p>${escapeHtml(entry.text)}</p></article>`).join('');
+  const list = document.getElementById('journalList');
+  const visible = visibleJournal();
+
+  list.innerHTML = visible.length ? visible.map(entry => {
+    const demo = isDemoJournal(entry);
+    const updated = !demo && entry.updatedAt
+      ? `<div class="prayer-meta">Editada · ${escapeHtml(formatStoredDate(entry.updatedAt))}</div>`
+      : '';
+    const actions = demo ? '' : `
+      <div class="prayer-actions">
+        <button class="small-action" type="button" onclick="openEditJournal(${entry.id})">Editar</button>
+        <button class="small-action" type="button" onclick="openDeleteJournal(${entry.id})">Eliminar</button>
+      </div>`;
+
+    return `
+      <article class="journal-entry">
+        <time>${demo ? 'Ejemplo de demostración · ' : ''}${escapeHtml(journalCreatedLabel(entry))}</time>
+        <p>${escapeHtml(entry.text)}</p>
+        ${updated}
+        ${actions}
+      </article>`;
+  }).join('') : '<article class="journal-entry"><p>No hay reflexiones guardadas.</p></article>';
+}
+
+function openEditJournal(id) {
+  const entry = findPersonalJournal(id);
+  if (!entry) {
+    showToast('Las entradas de demostración no se pueden editar.');
+    return;
+  }
+
+  openModal(`
+    <button class="modal-close" onclick="closeModal()" aria-label="Cerrar">×</button>
+    <span class="eyebrow">Editar reflexión</span>
+    <h2 id="modalTitle">Actualizar entrada del diario</h2>
+    <p>Creada · ${escapeHtml(journalCreatedLabel(entry))}</p>
+    <form class="modal-form" id="editJournalForm">
+      <label for="editJournalText">Reflexión</label>
+      <textarea id="editJournalText" maxlength="600" required>${escapeHtml(entry.text)}</textarea>
+      <button class="button primary modal-action" type="submit">Guardar cambios</button>
+    </form>
+  `);
+
+  document.getElementById('editJournalForm').addEventListener('submit', event => {
+    event.preventDefault();
+    const index = personalJournals.findIndex(item => item.id === entry.id);
+    if (index < 0) return;
+
+    const updated = normalizeJournalEntry({
+      ...personalJournals[index],
+      text: document.getElementById('editJournalText').value,
+      updatedAt: new Date().toISOString()
+    });
+    if (!updated) return showToast('Escribe una reflexión antes de guardar');
+
+    personalJournals[index] = updated;
+    const persisted = persistPersonalState();
+    closeModal();
+    renderJournal();
+    showToast(persisted ? 'Reflexión actualizada' : 'Cambio disponible solo durante esta sesión');
+  });
+}
+
+function openDeleteJournal(id) {
+  const entry = findPersonalJournal(id);
+  if (!entry) {
+    showToast('Las entradas de demostración no se pueden eliminar.');
+    return;
+  }
+
+  openModal(`
+    <button class="modal-close" onclick="closeModal()" aria-label="Cerrar">×</button>
+    <span class="eyebrow">Eliminar reflexión</span>
+    <h2 id="modalTitle">Entrada del ${escapeHtml(journalCreatedLabel(entry))}</h2>
+    <p>Esta acción eliminará definitivamente esta reflexión del estado local de Mi Momento en este navegador.</p>
+    <button class="button primary modal-action" type="button" onclick="deleteJournal(${entry.id})">Eliminar definitivamente</button>
+    <button class="small-action" type="button" onclick="closeModal()">Cancelar</button>
+  `);
+}
+
+function deleteJournal(id) {
+  const before = personalJournals.length;
+  personalJournals = personalJournals.filter(entry => entry.id !== Number(id));
+  if (personalJournals.length === before) return;
+
+  const persisted = persistPersonalState();
+  closeModal();
+  renderJournal();
+  updateMetrics();
+  showToast(persisted ? 'Reflexión eliminada del navegador' : 'Eliminada solo durante esta sesión');
 }
 
 function updateMetrics() {
