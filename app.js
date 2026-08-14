@@ -10,6 +10,13 @@ const modalBackdrop = document.getElementById('modalBackdrop');
 const modalContent = document.getElementById('modalContent');
 const toast = document.getElementById('toast');
 
+const STORAGE_KEY = 'mimomento-local-v1';
+const STORAGE_VERSION = 1;
+const LEGACY_PRAYERS_KEY = 'devotionalPrayers';
+const LEGACY_JOURNAL_KEY = 'devotionalJournal';
+const PRAYER_CATEGORIES = new Set(['Personal', 'Familia', 'Salud', 'Estudios', 'Trabajo', 'Decisiones', 'Gratitud']);
+const PRAYER_STATUSES = new Set(['active', 'answered']);
+
 const seedPrayers = [
   { id: 1, demo: true, title: 'Por mi familia', text: 'Que podamos acompañarnos con paciencia y comprensión en las decisiones de esta semana.', category: 'Familia', date: 'Hoy', status: 'active' },
   { id: 2, demo: true, title: 'Por una decisión importante', text: 'Pido claridad para elegir con calma y actuar de manera coherente con mis valores.', category: 'Decisiones', date: 'Ayer', status: 'active' },
@@ -23,16 +30,217 @@ const seedJournal = [
   { id: 2, demo: true, date: '5 agosto 2026', text: 'Me quedo con la idea de escuchar antes de responder. Fue una reflexión simple, pero necesaria para esta semana.' }
 ];
 
-let prayers = JSON.parse(localStorage.getItem('devotionalPrayers') || 'null') || seedPrayers;
-let journals = JSON.parse(localStorage.getItem('devotionalJournal') || 'null') || seedJournal;
+let storageWritable = true;
+let personalPrayers = [];
+let personalJournals = [];
 let prayerTab = 'active';
 
+function emptyState() {
+  return { version: STORAGE_VERSION, prayers: [], journal: [] };
+}
+
+function safeStorageGet(key) {
+  if (!storageWritable) return null;
+  try {
+    return localStorage.getItem(key);
+  } catch {
+    storageWritable = false;
+    return null;
+  }
+}
+
+function safeStorageSet(key, value) {
+  if (!storageWritable) return false;
+  try {
+    localStorage.setItem(key, value);
+    return true;
+  } catch {
+    storageWritable = false;
+    return false;
+  }
+}
+
+function safeStorageRemove(key) {
+  if (!storageWritable) return false;
+  try {
+    localStorage.removeItem(key);
+    return true;
+  } catch {
+    storageWritable = false;
+    return false;
+  }
+}
+
+function parseJson(raw) {
+  if (typeof raw !== 'string') return null;
+  try {
+    return JSON.parse(raw);
+  } catch {
+    return null;
+  }
+}
+
+function cleanText(value, maxLength) {
+  if (typeof value !== 'string') return '';
+  return value.trim().slice(0, maxLength);
+}
+
+function normalizeId(value) {
+  const id = Number(value);
+  return Number.isSafeInteger(id) && id > 0 ? id : null;
+}
+
+function normalizeCreatedAt(value) {
+  if (typeof value !== 'string' || !value.trim()) return null;
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? null : date.toISOString();
+}
+
+function isLegacyDemoPrayer(record) {
+  return record?.demo === true || [1, 2, 3, 4, 5].includes(Number(record?.id));
+}
+
+function isLegacyDemoJournal(record) {
+  return record?.demo === true || [1, 2].includes(Number(record?.id));
+}
+
+function normalizePrayer(record) {
+  if (!record || typeof record !== 'object' || Array.isArray(record) || isLegacyDemoPrayer(record)) return null;
+
+  const id = normalizeId(record.id);
+  const title = cleanText(record.title, 120);
+  const text = cleanText(record.text, 1200);
+  const category = PRAYER_CATEGORIES.has(record.category) ? record.category : 'Personal';
+  const status = PRAYER_STATUSES.has(record.status) ? record.status : 'active';
+  const date = cleanText(record.date, 60) || 'Sin fecha';
+
+  if (!id || !title || !text) return null;
+
+  return {
+    id,
+    title,
+    text,
+    category,
+    date,
+    status,
+    createdAt: normalizeCreatedAt(record.createdAt)
+  };
+}
+
+function normalizeJournalEntry(record) {
+  if (!record || typeof record !== 'object' || Array.isArray(record) || isLegacyDemoJournal(record)) return null;
+
+  const id = normalizeId(record.id);
+  const text = cleanText(record.text, 600);
+  const date = cleanText(record.date, 60) || 'Sin fecha';
+
+  if (!id || !text) return null;
+
+  return {
+    id,
+    date,
+    text,
+    createdAt: normalizeCreatedAt(record.createdAt)
+  };
+}
+
+function uniqueValidRecords(records, normalizer) {
+  if (!Array.isArray(records)) return [];
+  const seen = new Set();
+  const valid = [];
+
+  records.forEach(record => {
+    const normalized = normalizer(record);
+    if (!normalized || seen.has(normalized.id)) return;
+    seen.add(normalized.id);
+    valid.push(normalized);
+  });
+
+  return valid;
+}
+
+function normalizeState(value) {
+  if (!value || typeof value !== 'object' || Array.isArray(value) || value.version !== STORAGE_VERSION) return null;
+  return {
+    version: STORAGE_VERSION,
+    prayers: uniqueValidRecords(value.prayers, normalizePrayer),
+    journal: uniqueValidRecords(value.journal, normalizeJournalEntry)
+  };
+}
+
+function writeState(state) {
+  return safeStorageSet(STORAGE_KEY, JSON.stringify({
+    version: STORAGE_VERSION,
+    prayers: state.prayers,
+    journal: state.journal
+  }));
+}
+
+function migrateLegacyState() {
+  const legacyPrayers = parseJson(safeStorageGet(LEGACY_PRAYERS_KEY));
+  const legacyJournal = parseJson(safeStorageGet(LEGACY_JOURNAL_KEY));
+  const state = {
+    version: STORAGE_VERSION,
+    prayers: uniqueValidRecords(legacyPrayers, normalizePrayer),
+    journal: uniqueValidRecords(legacyJournal, normalizeJournalEntry)
+  };
+
+  if (writeState(state)) {
+    safeStorageRemove(LEGACY_PRAYERS_KEY);
+    safeStorageRemove(LEGACY_JOURNAL_KEY);
+  }
+
+  return state;
+}
+
+function loadState() {
+  const raw = safeStorageGet(STORAGE_KEY);
+  if (!storageWritable) return emptyState();
+
+  if (raw === null) return migrateLegacyState();
+
+  const parsed = parseJson(raw);
+  if (!parsed) {
+    const recovered = migrateLegacyState();
+    writeState(recovered);
+    return recovered;
+  }
+
+  if (parsed.version !== STORAGE_VERSION) {
+    storageWritable = false;
+    return emptyState();
+  }
+
+  const normalized = normalizeState(parsed) || emptyState();
+  if (writeState(normalized)) {
+    safeStorageRemove(LEGACY_PRAYERS_KEY);
+    safeStorageRemove(LEGACY_JOURNAL_KEY);
+  }
+  return normalized;
+}
+
+function persistPersonalState() {
+  return writeState({
+    version: STORAGE_VERSION,
+    prayers: personalPrayers,
+    journal: personalJournals
+  });
+}
+
+function visiblePrayers() {
+  return [...personalPrayers, ...seedPrayers];
+}
+
+function visibleJournal() {
+  return [...personalJournals, ...seedJournal];
+}
+
 function isDemoPrayer(prayer) {
-  return prayer?.demo === true || [1, 2, 3, 4, 5].includes(prayer?.id);
+  return prayer?.demo === true;
 }
 
 function isDemoJournal(entry) {
-  return entry?.demo === true || [1, 2].includes(entry?.id);
+  return entry?.demo === true;
 }
 
 function navigate(target) {
@@ -132,54 +340,54 @@ function openPrayerForm() {
     <span class="eyebrow">Nueva petición local</span>
     <h2 id="modalTitle">Registrar oración</h2>
     <form class="modal-form" id="prayerForm">
-      <label>Título</label>
-      <input id="prayerTitle" required placeholder="Ej. Por mi familia" />
-      <label>Categoría</label>
+      <label for="prayerTitle">Título</label>
+      <input id="prayerTitle" maxlength="120" required placeholder="Ej. Por mi familia" />
+      <label for="prayerCategory">Categoría</label>
       <select id="prayerCategory"><option>Personal</option><option>Familia</option><option>Salud</option><option>Estudios</option><option>Trabajo</option><option>Decisiones</option><option>Gratitud</option></select>
-      <label>Petición o reflexión</label>
-      <textarea id="prayerText" required placeholder="Escribe con tus propias palabras..."></textarea>
+      <label for="prayerText">Petición o reflexión</label>
+      <textarea id="prayerText" maxlength="1200" required placeholder="Escribe con tus propias palabras..."></textarea>
       <button class="button primary modal-action" type="submit">Guardar oración en este navegador</button>
     </form>
   `);
   document.getElementById('prayerForm').addEventListener('submit', e => {
     e.preventDefault();
-    prayers.unshift({
+    const now = new Date();
+    const record = normalizePrayer({
       id: Date.now(),
-      demo: false,
-      title: document.getElementById('prayerTitle').value.trim(),
+      title: document.getElementById('prayerTitle').value,
       category: document.getElementById('prayerCategory').value,
-      text: document.getElementById('prayerText').value.trim(),
-      date: 'Hoy', status: 'active'
+      text: document.getElementById('prayerText').value,
+      date: 'Hoy',
+      status: 'active',
+      createdAt: now.toISOString()
     });
-    persistPrayers();
+    if (!record) return showToast('No se pudo guardar. Revisa el título y el texto.');
+
+    personalPrayers.unshift(record);
+    const persisted = persistPersonalState();
     closeModal();
     prayerTab = 'active';
     navigate('prayers');
-    showToast('Oración guardada localmente');
+    showToast(persisted ? 'Oración guardada localmente' : 'Oración disponible solo durante esta sesión');
   });
 }
 
 document.getElementById('newPrayerBtn').addEventListener('click', openPrayerForm);
 document.getElementById('quickPrayerBtn').addEventListener('click', openPrayerForm);
 
-function persistPrayers() {
-  localStorage.setItem('devotionalPrayers', JSON.stringify(prayers));
-  updateMetrics();
-}
-
 function renderPrayers() {
   const list = document.getElementById('prayerList');
-  const visible = prayers.filter(p => p.status === prayerTab);
+  const visible = visiblePrayers().filter(p => p.status === prayerTab);
   list.innerHTML = visible.length ? visible.map(p => {
     const demo = isDemoPrayer(p);
     return `
     <article class="prayer-card">
       <div class="prayer-card-top">
         <div>
-          <span class="eyebrow">${demo ? 'Ejemplo de demostración · ' : ''}${p.category}</span>
+          <span class="eyebrow">${demo ? 'Ejemplo de demostración · ' : ''}${escapeHtml(p.category)}</span>
           <h3>${escapeHtml(p.title)}</h3>
         </div>
-        <span class="prayer-meta">${p.date}</span>
+        <span class="prayer-meta">${escapeHtml(p.date)}</span>
       </div>
       <p>${escapeHtml(p.text)}</p>
       <div class="prayer-meta"><span class="category-dot"></span>${demo ? 'Ejemplo · ' : ''}${p.status === 'active' ? 'En seguimiento' : 'Oración respondida'}</div>
@@ -195,14 +403,22 @@ document.querySelectorAll('[data-prayer-tab]').forEach(btn => btn.addEventListen
 }));
 
 function markAnswered(id) {
-  prayers = prayers.map(p => p.id === id ? { ...p, status:'answered', date:'Hoy' } : p);
-  persistPrayers();
+  if (seedPrayers.some(p => p.id === id)) {
+    showToast('Los ejemplos de demostración no se modifican ni se guardan.');
+    return;
+  }
+
+  const index = personalPrayers.findIndex(p => p.id === id);
+  if (index < 0) return;
+  personalPrayers[index] = { ...personalPrayers[index], status: 'answered', date: 'Hoy' };
+  const persisted = persistPersonalState();
   renderPrayers();
-  showToast(isDemoPrayer(prayers.find(p => p.id === id)) ? 'Ejemplo movido a respondidas dentro de la demo' : 'La oración pasó a respondidas');
+  updateMetrics();
+  showToast(persisted ? 'La oración pasó a respondidas' : 'Cambio disponible solo durante esta sesión');
 }
 
 function addPrayerNote(id) {
-  const p = prayers.find(x => x.id === id);
+  const p = visiblePrayers().find(x => x.id === id);
   if (!p) return;
   openModal(`
     <button class="modal-close" onclick="closeModal()">×</button>
@@ -217,22 +433,29 @@ function addPrayerNote(id) {
 const journalText = document.getElementById('journalText');
 journalText.addEventListener('input', () => document.getElementById('charCount').textContent = `${journalText.value.length}/600`);
 document.getElementById('saveJournalBtn').addEventListener('click', () => {
-  const text = journalText.value.trim();
-  if (!text) return showToast('Escribe una reflexión antes de guardar');
-  journals.unshift({ id: Date.now(), demo: false, date: new Intl.DateTimeFormat('es-PE',{day:'numeric',month:'long',year:'numeric'}).format(new Date()), text });
-  localStorage.setItem('devotionalJournal', JSON.stringify(journals));
+  const now = new Date();
+  const record = normalizeJournalEntry({
+    id: Date.now(),
+    date: new Intl.DateTimeFormat('es-PE', { day:'numeric', month:'long', year:'numeric' }).format(now),
+    text: journalText.value,
+    createdAt: now.toISOString()
+  });
+  if (!record) return showToast('Escribe una reflexión antes de guardar');
+
+  personalJournals.unshift(record);
+  const persisted = persistPersonalState();
   journalText.value = '';
   document.getElementById('charCount').textContent = '0/600';
-  renderJournal(); updateMetrics(); showToast('Reflexión guardada localmente');
+  renderJournal();
+  updateMetrics();
+  showToast(persisted ? 'Reflexión guardada localmente' : 'Reflexión disponible solo durante esta sesión');
 });
 
 function renderJournal() {
-  document.getElementById('journalList').innerHTML = journals.map(j => `<article class="journal-entry"><time>${isDemoJournal(j) ? 'Ejemplo de demostración · ' : ''}${j.date}</time><p>${escapeHtml(j.text)}</p></article>`).join('');
+  document.getElementById('journalList').innerHTML = visibleJournal().map(j => `<article class="journal-entry"><time>${isDemoJournal(j) ? 'Ejemplo de demostración · ' : ''}${escapeHtml(j.date)}</time><p>${escapeHtml(j.text)}</p></article>`).join('');
 }
 
 function updateMetrics() {
-  const personalPrayers = prayers.filter(p => !isDemoPrayer(p));
-  const personalJournals = journals.filter(j => !isDemoJournal(j));
   const active = personalPrayers.filter(p => p.status === 'active').length;
   const answered = personalPrayers.filter(p => p.status === 'answered').length;
   document.getElementById('activePrayerCount').textContent = active;
@@ -258,9 +481,13 @@ document.getElementById('profileBtn').addEventListener('click', () => openModal(
   <button class="button primary modal-action" onclick="closeModal()">Cerrar</button>
 `));
 
-function escapeHtml(value='') {
-  return value.replace(/[&<>'"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#039;','"':'&quot;'}[ch]));
+function escapeHtml(value = '') {
+  return String(value).replace(/[&<>'"]/g, ch => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#039;', '"':'&quot;' }[ch]));
 }
+
+const initialState = loadState();
+personalPrayers = initialState.prayers;
+personalJournals = initialState.journal;
 
 setDateGreeting();
 renderPrayers();
