@@ -49,7 +49,7 @@
         <div>
           <p class="eyebrow">Privacidad · Mi Momento</p>
           <h1>Política de <span>privacidad</span></h1>
-          <p class="lead">Esta política describe el comportamiento real de la demo web: qué oraciones, notas de seguimiento, reflexiones y acciones devocionales se guardan en el navegador, cómo se validan y qué ejemplos no se persisten.</p>
+          <p class="lead">Esta política describe el comportamiento real de la demo web: qué oraciones, notas de seguimiento, reflexiones y acciones devocionales se guardan en el navegador, cómo se validan y qué controles locales existen para gestionarlas.</p>
           <div class="meta">
             <span><strong>Aplicación</strong> Mi Momento</span>
             <span><strong>Responsable</strong> Neuronova Apps · Gabriel Berrospi</span>
@@ -92,7 +92,7 @@
           <section id="alcance">
             <span class="number">02</span>
             <h2>Alcance actual</h2>
-            <p>Esta política corresponde a la <strong>demo web funcional</strong> publicada en GitHub Pages. Actualmente permite guardar y gestionar oraciones personales, añadir notas de seguimiento, escribir reflexiones y registrar progreso devocional local generado por acciones realizadas en la propia demo.</p>
+            <p>Esta política corresponde a la <strong>demo web funcional</strong> publicada en GitHub Pages. Actualmente permite guardar y gestionar oraciones personales, añadir notas de seguimiento, crear, editar y eliminar reflexiones del diario y registrar progreso devocional local generado por acciones realizadas en la propia demo.</p>
             <p>La biblioteca continúa siendo limitada: cada plan muestra una duración conceptual mayor, pero la versión actual solo publica tres sesiones completables por plan. Las cuentas, sincronización, copias de seguridad y otras funciones siguen sin implementarse.</p>
           </section>
 
@@ -102,7 +102,7 @@
             <p>La demo puede utilizarse sin crear una cuenta y sin proporcionar nombre, correo electrónico, teléfono u otros datos identificativos.</p>
             <p>Mi Momento utiliza <code>localStorage</code> con la clave <code>mimomento-local-v1</code>. El objeto guardado declara <code>version: 1</code> y puede contener <code>prayers</code>, <code>journal</code> y <code>devotional</code>.</p>
             <p>En una oración pueden conservarse ID local, título, texto, categoría, estado, fecha visible y marcas técnicas de creación, actualización y respuesta. También puede conservarse una colección de notas de seguimiento vinculadas a esa oración.</p>
-            <p>En una reflexión pueden conservarse ID local, fecha visible, texto y fecha técnica de creación. Estos datos se procesan en el navegador y no se envían a una base de datos propia de Mi Momento en la configuración actual.</p>
+            <p>En una reflexión del diario pueden conservarse ID local, fecha visible, texto y marcas técnicas de creación y, cuando fue editada, de actualización. Estos datos se procesan en el navegador y no se envían a una base de datos propia de Mi Momento en la configuración actual.</p>
           </section>
 
           <section id="seguimiento">
@@ -125,9 +125,9 @@
             <span class="number">06</span>
             <h2>Validación, recuperación y migración</h2>
             <p>Antes de utilizar datos restaurados, la aplicación comprueba la versión del formato y valida cada registro. Los IDs inválidos o duplicados se descartan; los textos se normalizan y limitan; las categorías y estados desconocidos se sustituyen por valores seguros.</p>
-            <p>Las notas de seguimiento se conservan únicamente si tienen ID, texto y fecha técnica válidos. Los campos <code>createdAt</code>, <code>updatedAt</code> y <code>answeredAt</code> se normalizan cuando contienen fechas válidas; <code>answeredAt</code> solo se conserva para oraciones cuyo estado es respondida.</p>
-            <p>Los estados anteriores de <code>mimomento-local-v1</code> que no contienen historial de notas siguen siendo compatibles: se cargan con una colección de notas vacía y sin inventar fechas de respuesta o actualización.</p>
-            <p>Las fechas de actividad devocional deben corresponder a un formato válido <code>YYYY-MM-DD</code>. Solo se acepta una finalización diaria por fecha y las sesiones de plan se normalizan a una secuencia continua desde la sesión 1.</p>
+            <p>Las notas de seguimiento se conservan únicamente si tienen ID, texto y fecha técnica válidos. Los campos <code>createdAt</code>, <code>updatedAt</code> y <code>answeredAt</code> de las oraciones se normalizan cuando contienen fechas válidas.</p>
+            <p>Las reflexiones personales se limitan a 600 caracteres. Su <code>createdAt</code> y su <code>updatedAt</code> opcional se normalizan cuando son válidos. Una entrada antigua sin <code>updatedAt</code> sigue siendo compatible; la aplicación no inventa una fecha de edición.</p>
+            <p>Los estados anteriores de <code>mimomento-local-v1</code> siguen siendo compatibles. Las fechas de actividad devocional deben corresponder a un formato válido <code>YYYY-MM-DD</code>, y las sesiones de plan se normalizan a una secuencia continua desde la sesión 1.</p>
             <p>Si el JSON almacenado no puede leerse, la aplicación intenta recuperar registros personales válidos desde las claves heredadas <code>devotionalPrayers</code> y <code>devotionalJournal</code>. Si se encuentra una versión futura que esta demo no entiende, no se sobrescribe. Si el navegador bloquea <code>localStorage</code>, la demo continúa temporalmente en memoria.</p>
           </section>
 
@@ -135,7 +135,7 @@
             <span class="number">07</span>
             <h2>Datos y contenido de demostración</h2>
             <p>La interfaz incluye oraciones y reflexiones precargadas para mostrar el diseño. Esos ejemplos se mantienen en el código y <strong>no se serializan en <code>localStorage</code></strong>.</p>
-            <p>Las oraciones de ejemplo no pueden recibir notas, editarse, eliminarse ni cambiar de estado como si fueran registros personales.</p>
+            <p>Las oraciones de ejemplo no pueden recibir notas, editarse, eliminarse ni cambiar de estado. Las reflexiones de ejemplo tampoco pueden editarse ni eliminarse como si fueran registros personales.</p>
             <p>La biblioteca devocional también sigue siendo contenido de muestra. Cuando la persona marca el devocional diario o una de las tres sesiones disponibles de un plan como completada, esa acción sí se registra como progreso local real.</p>
           </section>
 
@@ -143,14 +143,14 @@
             <span class="number">08</span>
             <h2>Seguridad y límites del almacenamiento local</h2>
             <p><code>localStorage</code> mantiene los datos dentro del perfil del navegador, pero no constituye por sí mismo cifrado de extremo a extremo ni una bóveda protegida por contraseña. Una persona con acceso al mismo dispositivo, perfil del navegador o herramientas de desarrollo podría acceder a los datos del sitio.</p>
-            <p>Por tratarse de textos potencialmente íntimos, incluidas oraciones y notas de seguimiento, se recomienda no utilizar la demo para información que requiera un nivel de protección superior al almacenamiento local del navegador.</p>
+            <p>Por tratarse de textos potencialmente íntimos, incluidas oraciones, notas de seguimiento y reflexiones del diario, se recomienda no utilizar la demo para información que requiera un nivel de protección superior al almacenamiento local del navegador.</p>
           </section>
 
           <section id="eliminacion">
             <span class="number">09</span>
             <h2>Retención y eliminación</h2>
-            <p>Las oraciones personales disponen de un control de eliminación dentro de la demo. Al eliminar una oración también se eliminan sus notas de seguimiento asociadas del estado local.</p>
-            <p>Las entradas del diario y los eventos de progreso devocional todavía no disponen de eliminación individual desde la interfaz. Permanecen en <code>localStorage</code> hasta que la aplicación incorpore esos controles o la persona borre los datos del sitio desde la configuración del navegador.</p>
+            <p>Las oraciones personales y las entradas personales del diario disponen de controles de eliminación dentro de la demo. Al eliminar una oración también se eliminan sus notas de seguimiento asociadas; al eliminar una reflexión, se retira ese registro de la colección local <code>journal</code>.</p>
+            <p>Los eventos de progreso devocional todavía no disponen de eliminación individual desde la interfaz. Permanecen en <code>localStorage</code> hasta que la aplicación incorpore esos controles o la persona borre los datos del sitio desde la configuración del navegador.</p>
             <p>No existe una cuenta de usuario ni una base de datos remota de Mi Momento que requiera una solicitud separada de eliminación.</p>
           </section>
 
