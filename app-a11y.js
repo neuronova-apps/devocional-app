@@ -122,7 +122,14 @@
       const returnTarget = modalReturnFocus;
       originalCloseModal();
       modalReturnFocus = null;
-      if (returnTarget instanceof HTMLElement && returnTarget.isConnected) requestAnimationFrame(() => returnTarget.focus({ preventScroll: true }));
+      requestAnimationFrame(() => {
+        if (returnTarget instanceof HTMLElement && returnTarget.isConnected && returnTarget.getClientRects().length > 0) {
+          returnTarget.focus({ preventScroll: true });
+          return;
+        }
+        const activePanel = document.querySelector('.screen.active');
+        if (activePanel instanceof HTMLElement) activePanel.focus();
+      });
     };
   }
 
