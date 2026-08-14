@@ -29,6 +29,7 @@
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="hero-orbit.css">
   <link rel="stylesheet" href="progress.css">
+  <link rel="stylesheet" href="accessibility-local.css">
   <link rel="stylesheet" href="https://neuronova-apps.github.io/assets/accessibility/accessibility.css">
   <script src="https://neuronova-apps.github.io/assets/accessibility/accessibility.js" defer></script>
 </head>
@@ -94,12 +95,12 @@
           <span class="status">Demo web</span>
         </div>
 
-        <nav class="app-tabs" aria-label="Secciones de Mi Momento">
-          <button class="nav-item active" data-nav="home">Inicio</button>
-          <button class="nav-item" data-nav="devotionals">Devocionales</button>
-          <button class="nav-item" data-nav="prayers">Oraciones</button>
-          <button class="nav-item" data-nav="journal">Diario</button>
-          <button class="nav-item" data-nav="progress">Progreso</button>
+        <nav class="app-tabs" role="tablist" aria-label="Secciones de Mi Momento">
+          <button class="nav-item active" id="appTab-home" role="tab" aria-selected="true" aria-controls="homeScreen" tabindex="0" data-nav="home">Inicio</button>
+          <button class="nav-item" id="appTab-devotionals" role="tab" aria-selected="false" aria-controls="devotionalsScreen" tabindex="-1" data-nav="devotionals">Devocionales</button>
+          <button class="nav-item" id="appTab-prayers" role="tab" aria-selected="false" aria-controls="prayersScreen" tabindex="-1" data-nav="prayers">Oraciones</button>
+          <button class="nav-item" id="appTab-journal" role="tab" aria-selected="false" aria-controls="journalScreen" tabindex="-1" data-nav="journal">Diario</button>
+          <button class="nav-item" id="appTab-progress" role="tab" aria-selected="false" aria-controls="progressScreen" tabindex="-1" data-nav="progress">Progreso</button>
         </nav>
 
         <div class="app-shell">
@@ -109,7 +110,7 @@
           </header>
 
           <div class="app-content">
-            <section class="screen active" id="homeScreen">
+            <section class="screen active" id="homeScreen" role="tabpanel" aria-labelledby="appTab-home" tabindex="-1">
               <div class="home-grid">
                 <article class="daily-card">
                   <span class="daily-label" id="dailyDevotionalLabel">Devocional de muestra de hoy</span>
@@ -137,7 +138,7 @@
               <article class="quick-card"><div><p class="eyebrow">Oración local</p><h3>¿Qué quieres presentar hoy?</h3></div><button class="floating-add" id="quickPrayerBtn" aria-label="Nueva oración">+</button></article>
             </section>
 
-            <section class="screen" id="devotionalsScreen">
+            <section class="screen" id="devotionalsScreen" role="tabpanel" aria-labelledby="appTab-devotionals" tabindex="-1">
               <div class="page-title"><p class="eyebrow">Biblioteca de muestra</p><h2>Devocionales</h2><p>Cada plan mantiene su duración conceptual, pero la demo publica solo tres sesiones utilizables. Completar esas sesiones sí actualiza tu progreso local; no se simulan los días de contenido que todavía no existen.</p></div>
               <div class="filter-row" id="devotionalFilters"><button class="chip active" data-filter="todos">Todos</button><button class="chip" data-filter="paz">Paz</button><button class="chip" data-filter="gratitud">Gratitud</button><button class="chip" data-filter="familia">Familia</button><button class="chip" data-filter="proposito">Propósito</button></div>
               <div class="devotional-list" id="devotionalList">
@@ -148,19 +149,19 @@
               </div>
             </section>
 
-            <section class="screen" id="prayersScreen">
+            <section class="screen" id="prayersScreen" role="tabpanel" aria-labelledby="appTab-prayers" tabindex="-1">
               <div class="page-title with-action"><div><p class="eyebrow">Registros locales</p><h2>Oraciones</h2><p>Los ejemplos precargados están identificados como demostración. Las nuevas oraciones que escribas se guardan localmente en este navegador.</p></div><button class="floating-add" id="newPrayerBtn" aria-label="Nueva oración">+</button></div>
-              <div class="segmented" id="prayerTabs"><button class="active" data-prayer-tab="active">Activas</button><button data-prayer-tab="answered">Respondidas</button></div>
-              <div class="prayer-list" id="prayerList"></div>
+              <div class="segmented" id="prayerTabs" role="tablist" aria-label="Estado de las oraciones"><button class="active" id="prayerTab-active" role="tab" aria-selected="true" aria-controls="prayerList" tabindex="0" data-prayer-tab="active">Activas</button><button id="prayerTab-answered" role="tab" aria-selected="false" aria-controls="prayerList" tabindex="-1" data-prayer-tab="answered">Respondidas</button></div>
+              <div class="prayer-list" id="prayerList" role="tabpanel" aria-labelledby="prayerTab-active"></div>
             </section>
 
-            <section class="screen" id="journalScreen">
+            <section class="screen" id="journalScreen" role="tabpanel" aria-labelledby="appTab-journal" tabindex="-1">
               <div class="page-title"><p class="eyebrow">Registros locales</p><h2>Mi diario</h2><p>Las entradas de ejemplo están identificadas como demostración. Las reflexiones que escribas se guardan localmente en este navegador.</p></div>
-              <article class="journal-compose"><label for="journalText">¿Qué quieres recordar de hoy?</label><textarea id="journalText" maxlength="600" placeholder="Escribe con libertad..."></textarea><div class="compose-footer"><span id="charCount">0/600</span><button class="button primary compact" id="saveJournalBtn">Guardar reflexión</button></div></article>
+              <article class="journal-compose"><label for="journalText">¿Qué quieres recordar de hoy?</label><textarea id="journalText" maxlength="600" placeholder="Escribe con libertad..."></textarea><div class="compose-footer"><span id="charCount" aria-live="polite" aria-atomic="true">0/600</span><button class="button primary compact" id="saveJournalBtn">Guardar reflexión</button></div></article>
               <div class="section-heading"><div><p class="eyebrow">Registros visibles</p><h3>Entradas del diario</h3></div></div><div class="journal-list" id="journalList"></div>
             </section>
 
-            <section class="screen" id="progressScreen">
+            <section class="screen" id="progressScreen" role="tabpanel" aria-labelledby="appTab-progress" tabindex="-1">
               <div class="page-title"><p class="eyebrow">Progreso local</p><h2>Progreso</h2><p>Esta pantalla se deriva únicamente de acciones devocionales completadas en la demo. No utiliza cifras precargadas ni suma ejemplos a tu historial.</p></div>
               <article class="progress-hero"><div class="progress-ring" id="devotionalProgressRing" style="--value:0"><div><strong id="devotionalProgressPercent">0%</strong><span>planes disponibles</span></div></div><div><p class="eyebrow">Planes de muestra</p><h3 id="devotionalProgressTitle">0 de 12 sesiones de plan completadas</h3><p id="devotionalProgressSummary">El porcentaje usa únicamente las tres sesiones disponibles de cada plan de muestra. El devocional diario suma actividad, pero no altera este porcentaje.</p></div></article>
               <div class="metric-list"><article><span>Sesiones devocionales</span><strong id="devotionalMetric">0</strong></article><article><span>Días con actividad</span><strong id="activityDaysMetric">0</strong></article><article><span>Tus reflexiones</span><strong id="journalMetric">0</strong></article><article><span>Tus oraciones</span><strong id="prayerMetric">0</strong></article></div>
@@ -177,8 +178,10 @@
     <div class="container footer-bottom">© 2026 Mi Momento · Neuronova Apps</div>
   </footer>
 
-  <div class="modal-backdrop" id="modalBackdrop" hidden><section class="modal" id="modalContent" role="dialog" aria-modal="true" aria-labelledby="modalTitle"></section></div>
-  <div class="toast" id="toast" role="status"></div>
+  <div class="a11y-status" id="appStatus" role="status" aria-live="polite" aria-atomic="true"></div>
+  <div class="modal-backdrop" id="modalBackdrop" hidden><section class="modal" id="modalContent" role="dialog" aria-modal="true" aria-labelledby="modalTitle" tabindex="-1"></section></div>
+  <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
   <script src="app.js"></script>
+  <script src="app-a11y.js"></script>
 </body>
 </html>
