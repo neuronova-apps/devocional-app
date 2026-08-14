@@ -58,14 +58,15 @@
 
   appTabs.forEach(tab => {
     tab.addEventListener('keydown', event => moveTab(event, appTabs, next => {
-      next.focus();
       if (typeof window.navigate === 'function') window.navigate(next.dataset.nav);
       syncAppTabs(next.dataset.nav);
       announce(`Sección ${sectionLabel(next.dataset.nav)}.`);
+      requestAnimationFrame(() => next.focus());
     }));
     tab.addEventListener('click', () => {
       syncAppTabs(tab.dataset.nav);
       announce(`Sección ${sectionLabel(tab.dataset.nav)}.`);
+      requestAnimationFrame(() => tab.focus());
     });
   });
 
