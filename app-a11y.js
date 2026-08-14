@@ -169,6 +169,14 @@
 
     const first = focusables[0];
     const last = focusables[focusables.length - 1];
+    const activeIndex = focusables.indexOf(document.activeElement);
+
+    if (activeIndex === -1) {
+      event.preventDefault();
+      (event.shiftKey ? last : first).focus();
+      return;
+    }
+
     if (event.shiftKey && document.activeElement === first) {
       event.preventDefault();
       last.focus();
