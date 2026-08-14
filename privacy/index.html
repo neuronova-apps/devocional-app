@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Política de privacidad de la demo web de Mi Momento: almacenamiento local versionado para oraciones y diario, datos de ejemplo no persistentes y funciones futuras.">
+  <meta name="description" content="Política de privacidad de la demo web de Mi Momento: almacenamiento local versionado para oraciones, diario y progreso devocional.">
   <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
   <meta name="application-name" content="Mi Momento">
   <meta name="theme-color" content="#f6f3e9">
@@ -12,7 +12,7 @@
   <meta property="og:locale" content="es_PE">
   <meta property="og:site_name" content="Mi Momento · Neuronova Apps">
   <meta property="og:title" content="Política de privacidad | Mi Momento">
-  <meta property="og:description" content="Privacidad de la demo web de Mi Momento y funcionamiento de su almacenamiento local versionado.">
+  <meta property="og:description" content="Privacidad de la demo web de Mi Momento y funcionamiento de su almacenamiento local para oraciones, diario y progreso devocional.">
   <meta property="og:url" content="https://neuronova-apps.github.io/mimomento-app/privacy/">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Política de privacidad | Mi Momento">
@@ -49,7 +49,7 @@
         <div>
           <p class="eyebrow">Privacidad · Mi Momento</p>
           <h1>Política de <span>privacidad</span></h1>
-          <p class="lead">Esta política describe el comportamiento real de la demo web actual: qué registros personales se guardan en el navegador, cómo se validan y migran, qué ejemplos no se persisten y qué funciones todavía no existen.</p>
+          <p class="lead">Esta política describe el comportamiento real de la demo web actual: qué registros personales y acciones devocionales se guardan en el navegador, cómo se validan y qué elementos de muestra no se persisten.</p>
           <div class="meta">
             <span><strong>Aplicación</strong> Mi Momento</span>
             <span><strong>Responsable</strong> Neuronova Apps · Gabriel Berrospi</span>
@@ -71,10 +71,10 @@
           <a href="#responsable">1. Responsable</a>
           <a href="#alcance">2. Alcance</a>
           <a href="#datos">3. Datos y almacenamiento</a>
-          <a href="#validacion">4. Validación y migración</a>
-          <a href="#demo">5. Datos de demostración</a>
-          <a href="#uso">6. Uso de la información</a>
-          <a href="#comparticion">7. Compartición</a>
+          <a href="#progreso">4. Progreso devocional</a>
+          <a href="#validacion">5. Validación y migración</a>
+          <a href="#demo">6. Datos de demostración</a>
+          <a href="#uso">7. Uso de la información</a>
           <a href="#seguridad">8. Seguridad</a>
           <a href="#eliminacion">9. Retención y eliminación</a>
           <a href="#terceros">10. Servicios de terceros</a>
@@ -92,48 +92,50 @@
           <section id="alcance">
             <span class="number">02</span>
             <h2>Alcance actual</h2>
-            <p>Esta política corresponde a la <strong>demo web funcional</strong> publicada en GitHub Pages. Actualmente permite crear oraciones y reflexiones locales. La biblioteca devocional, la finalización de planes, las notas de seguimiento, las rachas y el progreso devocional todavía son funciones demostrativas o no implementadas.</p>
-            <p>Una futura aplicación móvil o una versión con cuentas, sincronización, analítica u otros servicios deberá revisar y actualizar esta política antes de habilitar esas funciones.</p>
+            <p>Esta política corresponde a la <strong>demo web funcional</strong> publicada en GitHub Pages. Actualmente permite guardar oraciones, reflexiones y progreso devocional local generado por acciones realizadas en la propia demo.</p>
+            <p>La biblioteca continúa siendo limitada: cada plan muestra una duración conceptual mayor, pero la versión actual solo publica tres sesiones completables por plan. Las notas de seguimiento de oraciones, cuentas, sincronización, copias de seguridad y otras funciones siguen sin implementarse.</p>
           </section>
 
           <section id="datos">
             <span class="number">03</span>
             <h2>Datos y almacenamiento local</h2>
             <p>La demo puede utilizarse sin crear una cuenta y sin proporcionar nombre, correo electrónico, teléfono u otros datos identificativos.</p>
-            <p>Mi Momento utiliza <code>localStorage</code> con la clave <code>mimomento-local-v1</code>. El objeto guardado declara <code>version: 1</code> y contiene dos colecciones: <code>prayers</code> para oraciones personales y <code>journal</code> para reflexiones personales.</p>
+            <p>Mi Momento utiliza <code>localStorage</code> con la clave <code>mimomento-local-v1</code>. El objeto guardado declara <code>version: 1</code> y puede contener <code>prayers</code>, <code>journal</code> y <code>devotional</code>.</p>
             <p>En una oración pueden conservarse ID local, título, texto, categoría, fecha visible, estado activa/respondida y fecha técnica de creación. En una reflexión pueden conservarse ID local, fecha visible, texto y fecha técnica de creación.</p>
             <p>Estos datos se procesan en el navegador y no se envían a una base de datos propia de Mi Momento en la configuración actual.</p>
           </section>
 
-          <section id="validacion">
+          <section id="progreso">
             <span class="number">04</span>
+            <h2>Progreso devocional</h2>
+            <p>El bloque <code>devotional</code> guarda únicamente registros de acciones completadas. Para el devocional diario se conserva la fecha local de finalización y una marca temporal técnica. Para los planes se conserva la sesión completada —actualmente de 1 a 3—, su fecha local y una marca temporal técnica.</p>
+            <p>La racha, el porcentaje de avance, el total de sesiones y el calendario de los últimos 28 días <strong>no se guardan como cifras independientes</strong>. Se recalculan en el navegador a partir de los registros de finalización válidos.</p>
+            <p>El porcentaje global de planes usa únicamente las doce sesiones actualmente disponibles: tres por cada uno de los cuatro planes. Los días conceptuales que todavía no tienen contenido no se cuentan como progreso.</p>
+          </section>
+
+          <section id="validacion">
+            <span class="number">05</span>
             <h2>Validación, recuperación y migración</h2>
             <p>Antes de utilizar datos restaurados, la aplicación comprueba la versión del formato y valida cada registro. Los IDs inválidos o duplicados se descartan; los textos se normalizan y limitan; las categorías y estados desconocidos se sustituyen por valores seguros.</p>
+            <p>Las fechas de actividad devocional deben corresponder a un formato válido <code>YYYY-MM-DD</code>. Solo se acepta una finalización diaria por fecha y las sesiones de plan se normalizan a una secuencia continua desde la sesión 1, sin saltos.</p>
+            <p>Los estados anteriores de <code>mimomento-local-v1</code> que no contienen el bloque <code>devotional</code> siguen siendo compatibles: se cargan con progreso vacío y se normalizan al nuevo formato ampliado.</p>
             <p>Si el JSON almacenado no puede leerse, la aplicación intenta recuperar registros personales válidos desde las claves heredadas <code>devotionalPrayers</code> y <code>devotionalJournal</code>. Si la migración se guarda correctamente, esas claves antiguas se eliminan.</p>
-            <p>Si se encuentra una versión futura que esta demo no entiende, no se sobrescribe ese formato. La aplicación continúa en memoria durante la sesión.</p>
-            <p>Si el navegador bloquea <code>localStorage</code>, la demo también puede seguir funcionando temporalmente en memoria; en ese caso los nuevos cambios no sobreviven a una recarga.</p>
+            <p>Si se encuentra una versión futura que esta demo no entiende, no se sobrescribe ese formato. Si el navegador bloquea <code>localStorage</code>, la demo continúa temporalmente en memoria durante la sesión.</p>
           </section>
 
           <section id="demo">
-            <span class="number">05</span>
-            <h2>Datos de demostración</h2>
-            <p>La interfaz incluye oraciones y reflexiones precargadas para mostrar el diseño. Esos ejemplos se mantienen en el código como contenido de muestra y <strong>ya no se serializan en <code>localStorage</code></strong>.</p>
-            <p>La lista visible combina temporalmente los registros personales y los ejemplos, pero los contadores personales utilizan únicamente la información creada por la persona usuaria. Los ejemplos tampoco pueden modificarse como registros propios.</p>
-            <p>No se guardan actualmente como historial personal las rachas, porcentajes de progreso, días de actividad, finalización de devocionales, avance de planes, notas de seguimiento ni preferencias de perfil.</p>
+            <span class="number">06</span>
+            <h2>Datos y contenido de demostración</h2>
+            <p>La interfaz incluye oraciones y reflexiones precargadas para mostrar el diseño. Esos ejemplos se mantienen en el código y <strong>no se serializan en <code>localStorage</code></strong>.</p>
+            <p>La biblioteca devocional también sigue siendo contenido de muestra. Sin embargo, cuando la persona marca el devocional diario o una de las tres sesiones disponibles de un plan como completada, esa acción sí se registra como progreso local real.</p>
+            <p>Los ejemplos de oración y diario no participan en contadores personales y no pueden modificarse como registros propios.</p>
           </section>
 
           <section id="uso">
-            <span class="number">06</span>
-            <h2>Uso de la información</h2>
-            <p>Los registros locales se utilizan para volver a mostrar las oraciones y reflexiones personales, mantener el estado activa/respondida y calcular contadores locales de esos registros.</p>
-            <p>Mi Momento no utiliza actualmente esos textos para publicidad personalizada, elaboración de perfiles comerciales ni venta de datos.</p>
-          </section>
-
-          <section id="comparticion">
             <span class="number">07</span>
-            <h2>Compartición de datos</h2>
-            <p>Mi Momento no sincroniza actualmente las oraciones o reflexiones con un servidor propio y no incorpora una función para compartir esos registros con otras personas.</p>
-            <p>Si en el futuro se habilita sincronización, copia de seguridad, comunidad, analítica o publicidad, la política se actualizará antes de utilizar esos servicios.</p>
+            <h2>Uso de la información</h2>
+            <p>Los registros locales se utilizan para volver a mostrar oraciones y reflexiones personales, mantener el estado activa/respondida y reconstruir el progreso devocional de la demo.</p>
+            <p>Mi Momento no utiliza actualmente esos textos o registros de progreso para publicidad personalizada, elaboración de perfiles comerciales ni venta de datos.</p>
           </section>
 
           <section id="seguridad">
@@ -146,7 +148,7 @@
           <section id="eliminacion">
             <span class="number">09</span>
             <h2>Retención y eliminación</h2>
-            <p>La demo actual todavía no ofrece controles de edición o eliminación individual para oraciones y entradas del diario. Los datos guardados permanecen en <code>localStorage</code> hasta que el navegador los elimine o la persona borre los datos del sitio desde la configuración del navegador.</p>
+            <p>La demo actual todavía no ofrece controles de edición o eliminación individual para oraciones, entradas del diario o eventos de progreso devocional. Los datos guardados permanecen en <code>localStorage</code> hasta que el navegador los elimine o la persona borre los datos del sitio desde la configuración del navegador.</p>
             <p>No existe una cuenta de usuario ni una base de datos remota de Mi Momento que requiera una solicitud separada de eliminación.</p>
           </section>
 
@@ -161,7 +163,7 @@
             <span class="number">11</span>
             <h2>Funciones futuras y publicación móvil</h2>
             <p>Antes de incorporar cuentas, sincronización, copias de seguridad, recordatorios remotos, analítica, publicidad, SDK externos o una versión móvil distribuida mediante una tienda, se revisarán el tratamiento de datos, permisos, bibliotecas y declaraciones públicas aplicables.</p>
-            <p>Las declaraciones de seguridad de datos de cualquier tienda deberán corresponder al funcionamiento real de la versión publicada, no a esta demo ni a funciones previstas.</p>
+            <p>Las declaraciones de seguridad de datos de cualquier tienda deberán corresponder al funcionamiento real de la versión publicada, no a funciones previstas.</p>
           </section>
 
           <section id="contacto">
