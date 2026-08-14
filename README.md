@@ -6,7 +6,7 @@ Mi Momento es un proyecto de Neuronova Apps orientado a devocionales, oraciones 
 
 **Demo web funcional en desarrollo.**
 
-La versión pública permite completar un devocional de muestra, avanzar por tres sesiones disponibles en cada plan, gestionar oraciones con seguimiento y escribir reflexiones. Todo el estado personal se conserva localmente en el navegador mediante `mimomento-local-v1`.
+La versión pública permite completar un devocional de muestra, avanzar por tres sesiones disponibles en cada plan, gestionar oraciones con seguimiento y crear, editar o eliminar reflexiones del diario. Todo el estado personal se conserva localmente en el navegador mediante `mimomento-local-v1`.
 
 ## Funciones reales
 
@@ -14,12 +14,14 @@ La versión pública permite completar un devocional de muestra, avanzar por tre
 - finalización diaria del devocional de muestra;
 - tres sesiones completables en cada uno de los cuatro planes;
 - progreso, racha y calendario derivados de actividad real;
-- creación de oraciones personales;
-- edición y eliminación de oraciones personales;
+- creación, edición y eliminación de oraciones personales;
 - cambio de activa a respondida con fecha técnica de respuesta;
 - notas de seguimiento persistentes y fechadas por oración;
 - historial de notas por petición;
 - creación de entradas del diario;
+- edición y eliminación de entradas personales del diario;
+- conservación de la fecha original de creación de cada reflexión;
+- registro de `updatedAt` al editar una reflexión;
 - persistencia local versionada y validada;
 - migración de las claves antiguas de la demo;
 - funcionamiento en memoria cuando `localStorage` no está disponible;
@@ -29,7 +31,8 @@ La versión pública permite completar un devocional de muestra, avanzar por tre
 
 - contenido completo de los planes de 7, 10, 14 y 21 días;
 - más de tres sesiones por plan;
-- edición y eliminación de entradas del diario;
+- edición o eliminación individual de notas de seguimiento;
+- eliminación individual de eventos de progreso devocional;
 - perfil, recordatorios, copias de seguridad y preferencias;
 - cuentas y sincronización remota.
 
@@ -47,7 +50,9 @@ El estado puede contener:
 - `journal`: reflexiones personales;
 - `devotional`: actividad devocional y sesiones completadas.
 
-Las oraciones guardadas antes del paso 4 siguen siendo compatibles. Al restaurarlas se completan de forma segura los campos nuevos con historial vacío cuando no existían.
+Los estados creados en pasos anteriores siguen siendo compatibles. Los campos nuevos se normalizan con valores vacíos o `null` cuando no existían, sin inventar fechas históricas.
+
+### Oraciones
 
 Una oración personal puede contener:
 
@@ -56,13 +61,19 @@ Una oración personal puede contener:
 - `answeredAt` cuando fue marcada como respondida;
 - `notes`, con elementos formados por `id`, `text` y `createdAt`.
 
-## Seguimiento de oraciones
+Cada oración puede acumular notas de hasta 600 caracteres. Marcarla como respondida conserva su contenido e historial. Eliminarla elimina también sus notas asociadas.
 
-Cada oración personal puede acumular notas de hasta 600 caracteres. El historial se muestra con las notas más recientes primero y se conserva al editar título, categoría o texto.
+### Diario
 
-Marcar una oración como respondida mantiene su fecha de creación y registra `answeredAt`. Una oración respondida puede continuar recibiendo notas.
+Una reflexión personal puede contener:
 
-Eliminar una oración elimina también sus notas asociadas. Los ejemplos demostrativos permanecen inmutables.
+- `id`;
+- `date`, conservado como texto visible de compatibilidad;
+- `text` de hasta 600 caracteres;
+- `createdAt`, cuando existe una fecha técnica válida;
+- `updatedAt`, cuando la reflexión fue editada.
+
+La interfaz muestra la fecha derivada de `createdAt` cuando está disponible y usa `date` como respaldo para registros antiguos. Editar una entrada modifica solo el texto y `updatedAt`; no altera su fecha de creación. Eliminar una entrada la retira de `journal` y actualiza el contador local.
 
 ## Validación
 
@@ -71,11 +82,12 @@ Eliminar una oración elimina también sus notas asociadas. Los ejemplos demostr
 - IDs positivos y no duplicados;
 - título de oración de hasta 120 caracteres;
 - texto de oración de hasta 1200 caracteres;
-- notas de hasta 600 caracteres;
-- notas con ID, texto y fecha técnica válidos;
-- categorías desconocidas normalizadas a `Personal`;
+- notas de seguimiento de hasta 600 caracteres;
+- reflexiones del diario de hasta 600 caracteres;
+- fechas técnicas normalizadas cuando son válidas;
+- `updatedAt` opcional para entradas del diario antiguas;
+- categorías desconocidas de oración normalizadas a `Personal`;
 - estados desconocidos normalizados a `active`;
-- `answeredAt` conservado solo para oraciones respondidas;
 - sesiones devocionales limitadas al contenido realmente disponible;
 - funcionamiento temporal en memoria si falla `localStorage`.
 
@@ -89,6 +101,8 @@ También se calculan desde eventos reales las sesiones devocionales, días con a
 
 Oraciones, notas de seguimiento, reflexiones y progreso devocional permanecen en el navegador. No existe actualmente cuenta, sincronización remota ni base de datos propia para estos registros.
 
+Las oraciones y las entradas personales del diario disponen de eliminación desde la interfaz. Los eventos de progreso devocional todavía requieren borrar los datos del sitio para eliminarlos.
+
 La política pública se encuentra en `privacy/index.html`.
 
 ## Accesibilidad
@@ -101,14 +115,14 @@ La web utiliza el módulo central de accesibilidad de Neuronova Apps. Es una bas
 - `styles.css`: estilos base y responsive.
 - `hero-orbit.css`: hero visual.
 - `progress.css`: estados de progreso y calendario.
-- `app.js`: navegación, validación, persistencia, progreso y seguimiento de oraciones.
+- `app.js`: navegación, validación, persistencia, progreso, seguimiento de oraciones y gestión del diario.
 - `privacy/index.html`: política de privacidad.
 - `privacy/styles.css`: estilos de privacidad.
 - `sitemap.xml`: rutas públicas indexables.
 
 ## Próxima etapa
 
-El siguiente trabajo previsto es **mejorar el diario personal**: edición y eliminación de entradas, fechas consistentes y controles claros sobre los registros locales sin alterar los ejemplos demostrativos.
+El siguiente trabajo previsto es **reforzar la accesibilidad específica de la aplicación**: modales, pestañas, formularios, gestión de foco, anuncios de estado y navegación por teclado, sin afirmar conformidad formal hasta completar validaciones manuales.
 
 ## Enlaces
 
