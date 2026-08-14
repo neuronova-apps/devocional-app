@@ -164,12 +164,40 @@ function dateKeyToDayNumber(value) {
   return Math.floor(Date.UTC(year, month - 1, day) / 86400000);
 }
 
+function formatStoredDate(value, fallback = 'Sin fecha') {
+  const normalized = normalizeCreatedAt(value);
+  if (!normalized) return fallback;
+  return new Intl.DateTimeFormat('es-PE', { day: 'numeric', month: 'short', year: 'numeric' }).format(new Date(normalized));
+}
+
 function isLegacyDemoPrayer(record) {
   return record?.demo === true || [1, 2, 3, 4, 5].includes(Number(record?.id));
 }
 
 function isLegacyDemoJournal(record) {
   return record?.demo === true || [1, 2].includes(Number(record?.id));
+}
+
+function normalizePrayerNote(record) {
+  if (!record || typeof record !== 'object' || Array.isArray(record)) return null;
+  const id = normalizeId(record.id);
+  const text = cleanText(record.text, 600);
+  const createdAt = normalizeCreatedAt(record.createdAt);
+  if (!id || !text || !createdAt) return null;
+  return { id, text, createdAt };
+}
+
+function normalizePrayerNotes(records) {
+  if (!Array.isArray(records)) return [];
+  const seen = new Set();
+  const valid = [];
+  records.forEach(record => {
+    const normalized = normalizePrayerNote(record);
+    if (!normalized || seen.has(normalized.id)) return;
+    seen.add(normalized.id);
+    valid.push(normalized);
+  });
+  return valid.sort((a, b) => a.createdAt.localeCompare(b.createdAt));
 }
 
 function normalizePrayer(record) {
@@ -181,6 +209,10 @@ function normalizePrayer(record) {
   const category = PRAYER_CATEGORIES.has(record.category) ? record.category : 'Personal';
   const status = PRAYER_STATUSES.has(record.status) ? record.status : 'active';
   const date = cleanText(record.date, 60) || 'Sin fecha';
+  const createdAt = normalizeCreatedAt(record.createdAt);
+  const updatedAt = normalizeCreatedAt(record.updatedAt);
+  const answeredAt = status === 'answered' ? normalizeCreatedAt(record.answeredAt) : null;
+  const notes = normalizePrayerNotes(record.notes);
 
   if (!id || !title || !text) return null;
 
@@ -191,7 +223,10 @@ function normalizePrayer(record) {
     category,
     date,
     status,
-    createdAt: normalizeCreatedAt(record.createdAt)
+    createdAt,
+    updatedAt,
+    answeredAt,
+    notes
   };
 }
 
@@ -295,8 +330,8 @@ function normalizeState(value) {
 function writeState(state) {
   return safeStorageSet(STORAGE_KEY, JSON.stringify({
     version: STORAGE_VERSION,
-    prayers: state.prayers,
-    journal: state.journal,
+    prayers: uniqueValidRecords(state.prayers, normalizePrayer),
+    journal: uniqueValidRecords(state.journal, normalizeJournalEntry),
     devotional: normalizeDevotionalProgress(state.devotional)
   }));
 }
@@ -482,7 +517,7 @@ function navigate(target) {
   if (target === 'progress') updateMetrics();
 }
 
-document.addEventListener('click', (event) => {
+document.addEventListener('click', event => {
   const nav = event.target.closest('[data-nav]');
   if (nav) navigate(nav.dataset.nav);
 
@@ -498,7 +533,7 @@ function setDateGreeting() {
   const hour = now.getHours();
   const greeting = hour < 12 ? 'Buenos días' : hour < 19 ? 'Buenas tardes' : 'Buenas noches';
   document.getElementById('greeting').textContent = greeting;
-  document.getElementById('dateLabel').textContent = new Intl.DateTimeFormat('es-PE', { weekday:'long', day:'numeric', month:'long' }).format(now);
+  document.getElementById('dateLabel').textContent = new Intl.DateTimeFormat('es-PE', { weekday: 'long', day: 'numeric', month: 'long' }).format(now);
 }
 
 function showToast(message) {
@@ -519,8 +554,13 @@ function closeModal() {
   document.body.style.overflow = '';
 }
 
-modalBackdrop.addEventListener('click', e => { if (e.target === modalBackdrop) closeModal(); });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+modalBackdrop.addEventListener('click', event => {
+  if (event.target === modalBackdrop) closeModal();
+});
+
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape') closeModal();
+});
 
 function openTodayDevotional() {
   const completedToday = devotionalProgress.daily.some(item => item.date === localDateKey());
@@ -603,6 +643,10 @@ function completePlanSession(key) {
   showToast(persisted ? `Sesión ${nextSession} guardada en tu progreso` : `Sesión ${nextSession} disponible solo durante esta sesión`);
 }
 
+function categoryOptions(selectedCategory) {
+  return [...PRAYER_CATEGORIES].map(category => `<option${category === selectedCategory ? ' selected' : ''}>${category}</option>`).join('');
+}
+
 function openPrayerForm() {
   openModal(`
     <button class="modal-close" onclick="closeModal()" aria-label="Cerrar">×</button>
@@ -612,23 +656,27 @@ function openPrayerForm() {
       <label for="prayerTitle">Título</label>
       <input id="prayerTitle" maxlength="120" required placeholder="Ej. Por mi familia" />
       <label for="prayerCategory">Categoría</label>
-      <select id="prayerCategory"><option>Personal</option><option>Familia</option><option>Salud</option><option>Estudios</option><option>Trabajo</option><option>Decisiones</option><option>Gratitud</option></select>
+      <select id="prayerCategory">${categoryOptions('Personal')}</select>
       <label for="prayerText">Petición o reflexión</label>
       <textarea id="prayerText" maxlength="1200" required placeholder="Escribe con tus propias palabras..."></textarea>
       <button class="button primary modal-action" type="submit">Guardar oración en este navegador</button>
     </form>
   `);
-  document.getElementById('prayerForm').addEventListener('submit', e => {
-    e.preventDefault();
+
+  document.getElementById('prayerForm').addEventListener('submit', event => {
+    event.preventDefault();
     const now = new Date();
     const record = normalizePrayer({
       id: Date.now(),
       title: document.getElementById('prayerTitle').value,
       category: document.getElementById('prayerCategory').value,
       text: document.getElementById('prayerText').value,
-      date: 'Hoy',
+      date: new Intl.DateTimeFormat('es-PE', { day: 'numeric', month: 'short', year: 'numeric' }).format(now),
       status: 'active',
-      createdAt: now.toISOString()
+      createdAt: now.toISOString(),
+      updatedAt: null,
+      answeredAt: null,
+      notes: []
     });
     if (!record) return showToast('No se pudo guardar. Revisa el título y el texto.');
 
@@ -644,68 +692,232 @@ function openPrayerForm() {
 document.getElementById('newPrayerBtn').addEventListener('click', openPrayerForm);
 document.getElementById('quickPrayerBtn').addEventListener('click', openPrayerForm);
 
-function renderPrayers() {
-  const list = document.getElementById('prayerList');
-  const visible = visiblePrayers().filter(p => p.status === prayerTab);
-  list.innerHTML = visible.length ? visible.map(p => {
-    const demo = isDemoPrayer(p);
-    return `
-    <article class="prayer-card">
-      <div class="prayer-card-top">
-        <div>
-          <span class="eyebrow">${demo ? 'Ejemplo de demostración · ' : ''}${escapeHtml(p.category)}</span>
-          <h3>${escapeHtml(p.title)}</h3>
-        </div>
-        <span class="prayer-meta">${escapeHtml(p.date)}</span>
-      </div>
-      <p>${escapeHtml(p.text)}</p>
-      <div class="prayer-meta"><span class="category-dot"></span>${demo ? 'Ejemplo · ' : ''}${p.status === 'active' ? 'En seguimiento' : 'Oración respondida'}</div>
-      ${p.status === 'active' ? `<div class="prayer-actions"><button class="small-action" onclick="markAnswered(${p.id})">Marcar respondida</button><button class="small-action" onclick="addPrayerNote(${p.id})">Ver seguimiento (demo)</button></div>` : ''}
-    </article>`;
-  }).join('') : `<article class="prayer-card"><p>No hay registros en esta sección.</p></article>`;
+function prayerCreatedLabel(prayer) {
+  return formatStoredDate(prayer.createdAt, prayer.date || 'Sin fecha');
 }
 
-document.querySelectorAll('[data-prayer-tab]').forEach(btn => btn.addEventListener('click', () => {
-  prayerTab = btn.dataset.prayerTab;
-  document.querySelectorAll('[data-prayer-tab]').forEach(b => b.classList.toggle('active', b === btn));
+function prayerStatusLabel(prayer, demo) {
+  if (demo) return prayer.status === 'active' ? 'Ejemplo · En seguimiento' : 'Ejemplo · Oración respondida';
+  if (prayer.status === 'active') return 'En seguimiento';
+  return prayer.answeredAt ? `Respondida · ${formatStoredDate(prayer.answeredAt)}` : 'Oración respondida';
+}
+
+function renderPrayers() {
+  const list = document.getElementById('prayerList');
+  const visible = visiblePrayers().filter(prayer => prayer.status === prayerTab);
+
+  list.innerHTML = visible.length ? visible.map(prayer => {
+    const demo = isDemoPrayer(prayer);
+    const notes = demo ? 0 : prayer.notes.length;
+    const actions = demo ? '' : `
+      <div class="prayer-actions">
+        ${prayer.status === 'active' ? `<button class="small-action" type="button" onclick="markAnswered(${prayer.id})">Marcar respondida</button>` : ''}
+        <button class="small-action" type="button" onclick="openPrayerTracking(${prayer.id})">Seguimiento${notes ? ` (${notes})` : ''}</button>
+        <button class="small-action" type="button" onclick="openEditPrayer(${prayer.id})">Editar</button>
+        <button class="small-action" type="button" onclick="openDeletePrayer(${prayer.id})">Eliminar</button>
+      </div>`;
+
+    return `
+      <article class="prayer-card">
+        <div class="prayer-card-top">
+          <div>
+            <span class="eyebrow">${demo ? 'Ejemplo de demostración · ' : ''}${escapeHtml(prayer.category)}</span>
+            <h3>${escapeHtml(prayer.title)}</h3>
+          </div>
+          <span class="prayer-meta">${escapeHtml(prayerCreatedLabel(prayer))}</span>
+        </div>
+        <p>${escapeHtml(prayer.text)}</p>
+        <div class="prayer-meta"><span class="category-dot"></span>${escapeHtml(prayerStatusLabel(prayer, demo))}${!demo ? ` · ${notes} ${notes === 1 ? 'nota' : 'notas'}` : ''}</div>
+        ${actions}
+      </article>`;
+  }).join('') : '<article class="prayer-card"><p>No hay registros en esta sección.</p></article>';
+}
+
+document.querySelectorAll('[data-prayer-tab]').forEach(button => button.addEventListener('click', () => {
+  prayerTab = button.dataset.prayerTab;
+  document.querySelectorAll('[data-prayer-tab]').forEach(item => item.classList.toggle('active', item === button));
   renderPrayers();
 }));
 
+function findPersonalPrayer(id) {
+  return personalPrayers.find(prayer => prayer.id === Number(id)) || null;
+}
+
 function markAnswered(id) {
-  if (seedPrayers.some(p => p.id === id)) {
+  if (seedPrayers.some(prayer => prayer.id === Number(id))) {
     showToast('Los ejemplos de demostración no se modifican ni se guardan.');
     return;
   }
 
-  const index = personalPrayers.findIndex(p => p.id === id);
-  if (index < 0) return;
-  personalPrayers[index] = { ...personalPrayers[index], status: 'answered', date: 'Hoy' };
+  const index = personalPrayers.findIndex(prayer => prayer.id === Number(id));
+  if (index < 0 || personalPrayers[index].status === 'answered') return;
+
+  const now = new Date().toISOString();
+  personalPrayers[index] = {
+    ...personalPrayers[index],
+    status: 'answered',
+    answeredAt: now,
+    updatedAt: now
+  };
+
   const persisted = persistPersonalState();
   renderPrayers();
   updateMetrics();
   showToast(persisted ? 'La oración pasó a respondidas' : 'Cambio disponible solo durante esta sesión');
 }
 
-function addPrayerNote(id) {
-  const p = visiblePrayers().find(x => x.id === id);
-  if (!p) return;
+function openPrayerTracking(id) {
+  const demoPrayer = seedPrayers.find(prayer => prayer.id === Number(id));
+  if (demoPrayer) {
+    openModal(`
+      <button class="modal-close" onclick="closeModal()" aria-label="Cerrar">×</button>
+      <span class="eyebrow">Ejemplo de demostración</span>
+      <h2 id="modalTitle">${escapeHtml(demoPrayer.title)}</h2>
+      <p>Los ejemplos precargados no aceptan notas ni cambios. Crea una oración propia para utilizar el seguimiento persistente.</p>
+      <button class="button primary modal-action" type="button" onclick="closeModal()">Cerrar</button>
+    `);
+    return;
+  }
+
+  const prayer = findPersonalPrayer(id);
+  if (!prayer) return;
+
+  const timeline = prayer.notes.length
+    ? [...prayer.notes].reverse().map(note => `
+        <div class="devotional-step">
+          <strong>${escapeHtml(formatStoredDate(note.createdAt))}</strong>
+          <span>${escapeHtml(note.text)}</span>
+        </div>`).join('')
+    : '<p>Todavía no hay notas de seguimiento para esta oración.</p>';
+
   openModal(`
     <button class="modal-close" onclick="closeModal()" aria-label="Cerrar">×</button>
-    <span class="eyebrow">Seguimiento demostrativo</span>
-    <h2 id="modalTitle">${escapeHtml(p.title)}</h2>
-    <p>La línea de tiempo de notas todavía no está implementada. Esta vista muestra cómo podría presentarse el seguimiento, pero no guarda observaciones.</p>
-    <div class="devotional-step"><strong>Ejemplo</strong><span>Una futura nota podría registrar fecha, cambio observado y texto de seguimiento.</span></div>
-    <button class="button primary modal-action" onclick="closeModal()">Cerrar demostración</button>
+    <span class="eyebrow">Seguimiento local</span>
+    <h2 id="modalTitle">${escapeHtml(prayer.title)}</h2>
+    <p>${escapeHtml(prayerStatusLabel(prayer, false))}</p>
+    <div>${timeline}</div>
+    <form class="modal-form" id="prayerNoteForm">
+      <label for="prayerNoteText">Nueva nota de seguimiento</label>
+      <textarea id="prayerNoteText" maxlength="600" required placeholder="Registra un cambio, una observación o una actualización..."></textarea>
+      <button class="button primary modal-action" type="submit">Guardar nota</button>
+    </form>
+  `);
+
+  document.getElementById('prayerNoteForm').addEventListener('submit', event => {
+    event.preventDefault();
+    savePrayerNote(prayer.id, document.getElementById('prayerNoteText').value);
+  });
+}
+
+function addPrayerNote(id) {
+  openPrayerTracking(id);
+}
+
+function savePrayerNote(id, value) {
+  const index = personalPrayers.findIndex(prayer => prayer.id === Number(id));
+  if (index < 0) return;
+
+  const now = new Date().toISOString();
+  const note = normalizePrayerNote({ id: Date.now(), text: value, createdAt: now });
+  if (!note) return showToast('Escribe una nota antes de guardar');
+
+  const updated = normalizePrayer({
+    ...personalPrayers[index],
+    notes: [...personalPrayers[index].notes, note],
+    updatedAt: now
+  });
+  if (!updated) return;
+
+  personalPrayers[index] = updated;
+  const persisted = persistPersonalState();
+  openPrayerTracking(id);
+  renderPrayers();
+  showToast(persisted ? 'Nota guardada localmente' : 'Nota disponible solo durante esta sesión');
+}
+
+function openEditPrayer(id) {
+  const prayer = findPersonalPrayer(id);
+  if (!prayer) {
+    showToast('Los ejemplos de demostración no se pueden editar.');
+    return;
+  }
+
+  openModal(`
+    <button class="modal-close" onclick="closeModal()" aria-label="Cerrar">×</button>
+    <span class="eyebrow">Editar oración</span>
+    <h2 id="modalTitle">Actualizar registro</h2>
+    <form class="modal-form" id="editPrayerForm">
+      <label for="editPrayerTitle">Título</label>
+      <input id="editPrayerTitle" maxlength="120" required value="${escapeHtml(prayer.title)}" />
+      <label for="editPrayerCategory">Categoría</label>
+      <select id="editPrayerCategory">${categoryOptions(prayer.category)}</select>
+      <label for="editPrayerText">Petición o reflexión</label>
+      <textarea id="editPrayerText" maxlength="1200" required>${escapeHtml(prayer.text)}</textarea>
+      <button class="button primary modal-action" type="submit">Guardar cambios</button>
+    </form>
+  `);
+
+  document.getElementById('editPrayerForm').addEventListener('submit', event => {
+    event.preventDefault();
+    const index = personalPrayers.findIndex(item => item.id === prayer.id);
+    if (index < 0) return;
+
+    const updated = normalizePrayer({
+      ...personalPrayers[index],
+      title: document.getElementById('editPrayerTitle').value,
+      category: document.getElementById('editPrayerCategory').value,
+      text: document.getElementById('editPrayerText').value,
+      updatedAt: new Date().toISOString()
+    });
+    if (!updated) return showToast('No se pudo guardar. Revisa el título y el texto.');
+
+    personalPrayers[index] = updated;
+    const persisted = persistPersonalState();
+    closeModal();
+    renderPrayers();
+    showToast(persisted ? 'Oración actualizada' : 'Cambio disponible solo durante esta sesión');
+  });
+}
+
+function openDeletePrayer(id) {
+  const prayer = findPersonalPrayer(id);
+  if (!prayer) {
+    showToast('Los ejemplos de demostración no se pueden eliminar.');
+    return;
+  }
+
+  openModal(`
+    <button class="modal-close" onclick="closeModal()" aria-label="Cerrar">×</button>
+    <span class="eyebrow">Eliminar oración</span>
+    <h2 id="modalTitle">${escapeHtml(prayer.title)}</h2>
+    <p>Esta acción eliminará la oración y sus ${prayer.notes.length} ${prayer.notes.length === 1 ? 'nota de seguimiento' : 'notas de seguimiento'} de este navegador.</p>
+    <button class="button primary modal-action" type="button" onclick="deletePrayer(${prayer.id})">Eliminar definitivamente</button>
+    <button class="small-action" type="button" onclick="closeModal()">Cancelar</button>
   `);
 }
 
+function deletePrayer(id) {
+  const before = personalPrayers.length;
+  personalPrayers = personalPrayers.filter(prayer => prayer.id !== Number(id));
+  if (personalPrayers.length === before) return;
+
+  const persisted = persistPersonalState();
+  closeModal();
+  renderPrayers();
+  updateMetrics();
+  showToast(persisted ? 'Oración eliminada del navegador' : 'Eliminada solo durante esta sesión');
+}
+
 const journalText = document.getElementById('journalText');
-journalText.addEventListener('input', () => document.getElementById('charCount').textContent = `${journalText.value.length}/600`);
+journalText.addEventListener('input', () => {
+  document.getElementById('charCount').textContent = `${journalText.value.length}/600`;
+});
+
 document.getElementById('saveJournalBtn').addEventListener('click', () => {
   const now = new Date();
   const record = normalizeJournalEntry({
     id: Date.now(),
-    date: new Intl.DateTimeFormat('es-PE', { day:'numeric', month:'long', year:'numeric' }).format(now),
+    date: new Intl.DateTimeFormat('es-PE', { day: 'numeric', month: 'long', year: 'numeric' }).format(now),
     text: journalText.value,
     createdAt: now.toISOString()
   });
@@ -721,12 +933,12 @@ document.getElementById('saveJournalBtn').addEventListener('click', () => {
 });
 
 function renderJournal() {
-  document.getElementById('journalList').innerHTML = visibleJournal().map(j => `<article class="journal-entry"><time>${isDemoJournal(j) ? 'Ejemplo de demostración · ' : ''}${escapeHtml(j.date)}</time><p>${escapeHtml(j.text)}</p></article>`).join('');
+  document.getElementById('journalList').innerHTML = visibleJournal().map(entry => `<article class="journal-entry"><time>${isDemoJournal(entry) ? 'Ejemplo de demostración · ' : ''}${escapeHtml(entry.date)}</time><p>${escapeHtml(entry.text)}</p></article>`).join('');
 }
 
 function updateMetrics() {
-  const active = personalPrayers.filter(p => p.status === 'active').length;
-  const answered = personalPrayers.filter(p => p.status === 'answered').length;
+  const active = personalPrayers.filter(prayer => prayer.status === 'active').length;
+  const answered = personalPrayers.filter(prayer => prayer.status === 'answered').length;
   document.getElementById('activePrayerCount').textContent = active;
   document.getElementById('answeredCount').textContent = answered;
   document.getElementById('prayerMetric').textContent = personalPrayers.length;
@@ -734,10 +946,12 @@ function updateMetrics() {
   renderDevotionalProgress();
 }
 
-document.querySelectorAll('#devotionalFilters .chip').forEach(btn => btn.addEventListener('click', () => {
-  document.querySelectorAll('#devotionalFilters .chip').forEach(b => b.classList.toggle('active', b === btn));
-  const filter = btn.dataset.filter;
-  document.querySelectorAll('.devotional-item').forEach(item => item.style.display = filter === 'todos' || item.dataset.category === filter ? '' : 'none');
+document.querySelectorAll('#devotionalFilters .chip').forEach(button => button.addEventListener('click', () => {
+  document.querySelectorAll('#devotionalFilters .chip').forEach(item => item.classList.toggle('active', item === button));
+  const filter = button.dataset.filter;
+  document.querySelectorAll('.devotional-item').forEach(item => {
+    item.style.display = filter === 'todos' || item.dataset.category === filter ? '' : 'none';
+  });
 }));
 
 document.getElementById('profileBtn').addEventListener('click', () => openModal(`
@@ -745,13 +959,13 @@ document.getElementById('profileBtn').addEventListener('click', () => openModal(
   <span class="eyebrow">Perfil conceptual</span>
   <h2 id="modalTitle">Funciones todavía no implementadas</h2>
   <p>Esta vista representa posibilidades futuras de configuración. Actualmente no guarda recordatorios, apariencia, copias de seguridad ni preferencias de contenido.</p>
-  <div class="devotional-step"><strong>Privacidad por diseño</strong><span>Las oraciones, reflexiones y progreso devocional permanecen en este navegador en la demo actual.</span></div>
+  <div class="devotional-step"><strong>Privacidad por diseño</strong><span>Las oraciones, sus notas de seguimiento, reflexiones y progreso devocional permanecen en este navegador en la demo actual.</span></div>
   <div class="devotional-step"><strong>Accesibilidad</strong><span>Tamaño de texto, contraste, lectura sencilla y controles claros deben validarse antes de realizar afirmaciones formales de conformidad.</span></div>
   <button class="button primary modal-action" onclick="closeModal()">Cerrar</button>
 `));
 
 function escapeHtml(value = '') {
-  return String(value).replace(/[&<>'"]/g, ch => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#039;', '"':'&quot;' }[ch]));
+  return String(value).replace(/[&<>'"]/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#039;', '"': '&quot;' }[char]));
 }
 
 const initialState = loadState();
