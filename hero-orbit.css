@@ -252,3 +252,12 @@
     margin-top: 18px;
   }
 }
+
+/* Regla orbital definitiva · Neuronova Apps */
+.hero-grid{gap:clamp(30px,5vw,64px)}
+.hero-visual{width:min(100%,430px);min-height:430px;justify-self:end}
+.dev-orbit-outer{width:332px;height:332px;margin:-166px 0 0 -166px}
+.dev-orbit-inner{width:214px;height:214px;margin:-107px 0 0 -107px}
+.dev-core{width:107px;height:107px;transform:rotate(-4deg)}
+@media(max-width:900px){.hero-visual{width:min(82vw,390px);min-height:390px;justify-self:center}}
+@media(max-width:700px){.hero-grid{gap:30px}.hero-visual{width:min(88vw,340px);min-height:340px}.dev-orbit-outer{width:286px;height:286px;margin:-143px 0 0 -143px}.dev-orbit-inner{width:186px;height:186px;margin:-93px 0 0 -93px}.dev-core{width:96px;height:96px;transform:rotate(-4deg)}}
