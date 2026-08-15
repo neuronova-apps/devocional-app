@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Mi Momento es una demo web funcional de devocionales, oración y reflexión personal con progreso devocional, oraciones y diario guardados localmente.">
+  <meta name="description" content="Mi Momento es una demo web funcional de devocionales, oración y reflexión personal con progreso local y guías educativas sobre devocionales, oraciones y diario.">
   <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
   <meta name="application-name" content="Mi Momento">
   <meta name="theme-color" content="#f6f3e9">
@@ -31,6 +31,7 @@
   <link rel="stylesheet" href="progress.css">
   <link rel="stylesheet" href="accessibility-local.css">
   <link rel="stylesheet" href="footer-ecosystem.css">
+  <link rel="stylesheet" href="guide-cards.css">
   <link rel="stylesheet" href="https://neuronova-apps.github.io/assets/accessibility/accessibility.css">
   <script src="https://neuronova-apps.github.io/assets/accessibility/accessibility.js" defer></script>
 </head>
@@ -50,6 +51,7 @@
         <button type="button" data-nav="devotionals">Devocionales</button>
         <button type="button" data-nav="prayers">Oraciones</button>
         <button type="button" data-nav="journal">Diario</button>
+        <a href="#guias">Guías</a>
         <a href="privacy/">Privacidad</a>
         <a href="https://neuronova-apps.github.io/">Neuronova</a>
       </nav>
@@ -118,8 +120,8 @@
                 <article class="daily-card">
                   <span class="daily-label" id="dailyDevotionalLabel">Devocional de muestra de hoy</span>
                   <h2>Cuando necesito paciencia</h2>
-                  <p class="verse">"Todo tiene su tiempo, y todo lo que se quiere debajo del cielo tiene su hora."</p>
-                  <p class="verse-ref">Eclesiastés 3:1</p>
+                  <p class="verse">Paráfrasis editorial: cada etapa tiene su momento y los procesos no siempre pueden apresurarse.</p>
+                  <p class="verse-ref">Referencia: Eclesiastés 3:1</p>
                   <button class="button primary light" id="dailyDevotionalButton" data-open-devotional="1">Comenzar devocional</button>
                 </article>
                 <div class="today-summary">
@@ -174,6 +176,25 @@
         </div>
       </div>
     </section>
+
+    <section class="section guides-section" id="guias" aria-labelledby="guidesTitle">
+      <div class="container">
+        <div class="guides-head">
+          <div>
+            <p class="eyebrow">Guías de Mi Momento</p>
+            <h2 id="guidesTitle">Recursos para usar la demo con más contexto.</h2>
+            <p>Estas páginas son contenido educativo estático. Explican cómo leer un devocional, organizar oraciones, revisar su seguimiento, escribir un diario y utilizar las métricas sin convertirlas en una obligación. Leerlas no modifica tus registros ni el progreso local.</p>
+          </div>
+        </div>
+        <div class="guide-grid">
+          <a class="guide-card" href="guia-mi-momento.html"><span class="eyebrow">Uso responsable</span><h3>Usar Mi Momento con calma</h3><p>Qué guarda la demo, cómo interpretar el progreso y qué conviene considerar antes de registrar información personal.</p><strong>Leer guía →</strong></a>
+          <a class="guide-card" href="como-usar-un-devocional.html"><span class="eyebrow">Devocionales</span><h3>Cómo usar un devocional</h3><p>Distingue referencia bíblica, paráfrasis editorial, pregunta personal y acción opcional.</p><strong>Leer guía →</strong></a>
+          <a class="guide-card" href="organizar-oraciones-personales.html"><span class="eyebrow">Oraciones</span><h3>Organizar oraciones personales</h3><p>Usa títulos, categorías y estados como ayudas para volver al registro sin convertirlo en una lista de tareas.</p><strong>Leer guía →</strong></a>
+          <a class="guide-card" href="seguimiento-de-oraciones.html"><span class="eyebrow">Seguimiento</span><h3>Recordar cambios con notas</h3><p>Conserva contexto y fechas sin forzar una conclusión sobre cada acontecimiento.</p><strong>Leer guía →</strong></a>
+          <a class="guide-card" href="diario-de-reflexion.html"><span class="eyebrow">Diario</span><h3>Escribir para recordar</h3><p>Una estructura breve para reflexionar, revisar, editar o eliminar entradas con criterio de privacidad.</p><strong>Leer guía →</strong></a>
+        </div>
+      </div>
+    </section>
   </main>
 
   <footer class="site-footer">
@@ -188,6 +209,7 @@
         <button class="footer-button" type="button" data-nav="prayers">Oraciones</button>
         <button class="footer-button" type="button" data-nav="journal">Diario</button>
         <button class="footer-button" type="button" data-nav="progress">Progreso</button>
+        <a href="#guias">Guías educativas</a>
         <a href="https://github.com/neuronova-apps/mimomento-app" target="_blank" rel="noopener noreferrer">GitHub</a>
       </div>
       <div class="footer-column">
