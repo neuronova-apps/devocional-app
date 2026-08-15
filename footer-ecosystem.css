@@ -1,5 +1,6 @@
 /* Footer de Mi Momento alineado con el ecosistema Neuronova */
 .site-footer {
+  position: relative;
   padding: 0;
   border-top: 1px solid rgba(255,255,255,.08);
   background: #1c2b27;
@@ -85,6 +86,24 @@
   margin: 0;
 }
 
+/* La política queda exclusivamente en la franja inferior. */
+.site-footer .footer-column:nth-child(2) a[href="privacy/"] {
+  position: absolute;
+  right: max(18px, calc((100% - 1180px) / 2));
+  bottom: 20px;
+  z-index: 2;
+  font-size: 0;
+}
+
+.site-footer .footer-column:nth-child(2) a[href="privacy/"]::after {
+  content: "Política de privacidad";
+  font-size: .74rem;
+}
+
+.site-footer .footer-bottom p:last-child {
+  display: none;
+}
+
 @media (max-width: 850px) {
   .site-footer .footer-grid {
     grid-template-columns: 1fr 1fr;
@@ -104,8 +123,15 @@
     grid-column: auto;
   }
   .site-footer .footer-bottom {
+    min-height: 82px;
     flex-direction: column;
     align-items: flex-start;
     gap: 8px;
+    padding-bottom: 42px;
+  }
+  .site-footer .footer-column:nth-child(2) a[href="privacy/"] {
+    left: 18px;
+    right: auto;
+    bottom: 16px;
   }
 }
