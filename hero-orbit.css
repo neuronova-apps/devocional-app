@@ -252,3 +252,8 @@
     margin-top: 18px;
   }
 }
+
+@media (max-width: 380px) {
+  .node-left { left: -36px; }
+  .node-right { right: -36px; }
+}
