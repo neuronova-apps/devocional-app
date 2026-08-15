@@ -5,6 +5,8 @@
   const journalText = document.getElementById('journalText');
   const saveJournalButton = document.getElementById('saveJournalBtn');
   const prayerList = document.getElementById('prayerList');
+  const menuButton = document.querySelector('.site-header .menu-button');
+  const mainNav = document.querySelector('.site-header .main-nav');
   const appTabs = [...document.querySelectorAll('.app-tabs [data-nav]')];
   const prayerTabs = [...document.querySelectorAll('[data-prayer-tab]')];
   const focusableSelector = 'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
@@ -15,6 +17,32 @@
     appStatus.textContent = '';
     requestAnimationFrame(() => { appStatus.textContent = message; });
   };
+
+  const closeMainNav = ({ restoreFocus = false } = {}) => {
+    if (!menuButton || !mainNav) return;
+    mainNav.classList.remove('open');
+    menuButton.setAttribute('aria-expanded', 'false');
+    menuButton.setAttribute('aria-label', 'Abrir menú de navegación');
+    if (restoreFocus) menuButton.focus({ preventScroll: true });
+  };
+
+  if (menuButton && mainNav) {
+    menuButton.addEventListener('click', () => {
+      const open = mainNav.classList.toggle('open');
+      menuButton.setAttribute('aria-expanded', String(open));
+      menuButton.setAttribute('aria-label', open ? 'Cerrar menú de navegación' : 'Abrir menú de navegación');
+    });
+
+    mainNav.querySelectorAll('a, button').forEach(control => {
+      control.addEventListener('click', () => closeMainNav());
+    });
+
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape' && mainNav.classList.contains('open')) {
+        closeMainNav({ restoreFocus: true });
+      }
+    });
+  }
 
   const sectionLabel = target => appTabs.find(tab => tab.dataset.nav === target)?.textContent.trim() || target;
 
