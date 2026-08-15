@@ -10,47 +10,6 @@
   const focusableSelector = 'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
   let modalReturnFocus = null;
 
-  function alignFooterWithEcosystem() {
-    if (!document.querySelector('link[href="footer-ecosystem.css"]')) {
-      const stylesheet = document.createElement('link');
-      stylesheet.rel = 'stylesheet';
-      stylesheet.href = 'footer-ecosystem.css';
-      document.head.appendChild(stylesheet);
-    }
-
-    const footer = document.querySelector('.site-footer');
-    if (!footer) return;
-
-    footer.innerHTML = `
-      <div class="container footer-grid">
-        <div class="footer-brand">
-          <strong>Mi Momento</strong>
-          <p>Devocionales, oración, reflexión y progreso personal guardados localmente en esta demo web.</p>
-        </div>
-        <div class="footer-column">
-          <h2>Explorar</h2>
-          <button class="footer-button" type="button" data-nav="devotionals">Devocionales</button>
-          <button class="footer-button" type="button" data-nav="prayers">Oraciones</button>
-          <button class="footer-button" type="button" data-nav="journal">Diario</button>
-          <button class="footer-button" type="button" data-nav="progress">Progreso</button>
-          <a href="privacy/">Privacidad</a>
-          <a href="https://github.com/neuronova-apps/mimomento-app" target="_blank" rel="noopener noreferrer">GitHub</a>
-        </div>
-        <div class="footer-column">
-          <h2>Contacto</h2>
-          <a href="mailto:berm_km@hotmail.com">berm_km@hotmail.com</a>
-          <span>Pucallpa, Ucayali · Perú</span>
-          <span>Proyecto independiente</span>
-        </div>
-      </div>
-      <div class="container footer-bottom">
-        <p>© 2026 Mi Momento · Neuronova Apps.</p>
-        <p>Diseñado para la web · Accesibilidad · Reflexión personal</p>
-      </div>`;
-  }
-
-  alignFooterWithEcosystem();
-
   const announce = message => {
     if (!appStatus || !message) return;
     appStatus.textContent = '';
