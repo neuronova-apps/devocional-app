@@ -55,6 +55,24 @@ Las guías son HTML estático. Leerlas no modifica `localStorage`, las oraciones
 
 Todas declaran `index, follow`, canonical propio, H1 único, navegación cruzada y acceso de regreso a la aplicación.
 
+## Presentación social
+
+Las siete páginas públicas —portada, cinco guías y privacidad— utilizan el mismo activo:
+
+`assets/social/mimomento-social.png`
+
+El PNG tiene dimensiones **1200×630**. La metadata social pública está normalizada con:
+
+- `og:image` apuntando al PNG absoluto;
+- `og:image:type="image/png"`;
+- `og:image:width="1200"` y `og:image:height="630"`;
+- `og:image:alt` consistente;
+- `twitter:card="summary_large_image"`;
+- `twitter:image` y `twitter:image:alt` con el mismo recurso;
+- títulos y descripciones específicos para cada página.
+
+El favicon permanece separado del activo social.
+
 ## Tecnología
 
 La versión web utiliza:
@@ -110,12 +128,12 @@ La rama `main` corresponde a la versión web pública. La rama `android` es actu
 - `resources.css`: estilos compartidos de las guías públicas;
 - `docs/editorial-model.md`: política editorial y de fuentes;
 - `privacy/`: política pública;
-- `assets/social/`: imagen social;
+- `assets/social/mimomento-social.png`: tarjeta social compartida de 1200×630;
 - `sitemap.xml`: siete rutas públicas indexables.
 
 ## Próxima etapa
 
-El siguiente trabajo previsto es **revisar y normalizar la presentación social** en las siete páginas públicas. El repositorio ya dispone de una imagen social 1200×630; la siguiente etapa debe verificar que Open Graph y Twitter utilicen de forma consistente ese activo, títulos, descripciones, dimensiones y textos alternativos.
+El siguiente trabajo previsto es **consolidar la documentación del proyecto**: alcance actual, arquitectura web, formato de datos, privacidad, accesibilidad, modelo editorial, publicación y roadmap, eliminando duplicaciones y dejando una referencia técnica única para el estado del MVP.
 
 ## Enlaces
 
