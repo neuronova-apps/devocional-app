@@ -125,36 +125,63 @@
 }
 
 .dev-core {
-  width: 107px;
-  height: 107px;
+  width: 128px;
+  height: 128px;
   position: relative;
   z-index: 3;
   display: grid;
   place-items: center;
-  align-content: center;
-  border: 1px solid rgba(121, 145, 126, .25);
-  border-radius: 29px;
-  background: rgba(255, 255, 255, .80);
-  box-shadow: 0 24px 64px rgba(70, 82, 74, .11), inset 0 0 30px rgba(183, 154, 93, .05);
+  border: 0;
+  border-radius: 34px;
+  background: rgba(255, 255, 255, .34);
+  box-shadow:
+    0 22px 58px rgba(70, 82, 74, .13),
+    0 0 0 1px rgba(121, 145, 126, .10),
+    0 0 52px rgba(88, 211, 245, .10);
+  transform: rotate(5deg);
 }
 
-.dev-core > span {
-  color: var(--gold);
-  font-size: 1.7rem;
+.dev-core::before {
+  content: "";
+  width: 102px;
+  height: 102px;
+  position: absolute;
+  left: 50%;
+  top: 9px;
+  transform: translateX(-50%);
+  border-radius: 23px;
+  background: url("favicon.svg") center / contain no-repeat;
+  box-shadow:
+    0 14px 28px rgba(15, 31, 56, .18),
+    0 0 0 5px rgba(255, 255, 255, .68),
+    0 0 24px rgba(88, 211, 245, .16);
 }
 
-.dev-core strong {
-  margin-top: 3px;
-  color: #52695a;
-  font-size: 2.5rem;
-  line-height: 1;
+.dev-core::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  border: 1px solid rgba(121, 145, 126, .16);
+  border-radius: 32px;
+  pointer-events: none;
+}
+
+.dev-core > span,
+.dev-core > strong {
+  display: none;
 }
 
 .dev-core small {
-  margin-top: 8px;
-  color: var(--muted);
-  font-size: .58rem;
+  position: absolute;
+  left: 50%;
+  bottom: 5px;
+  margin: 0;
+  transform: translateX(-50%) rotate(-5deg);
+  color: #52695a;
+  font-size: .50rem;
+  font-weight: 850;
   letter-spacing: .12em;
+  white-space: nowrap;
 }
 
 @keyframes outer {
@@ -256,43 +283,4 @@
 @media (max-width: 380px) {
   .node-left { left: -36px; }
   .node-right { right: -36px; }
-}
-
-/* Núcleo de Mi Momento alineado con la identidad de los núcleos NeuroNova */
-.dev-core {
-  overflow: hidden;
-  background:
-    linear-gradient(rgba(255,255,255,.88), rgba(255,255,255,.88)),
-    url("favicon.svg") center / 76px 76px no-repeat;
-}
-
-.dev-core::before {
-  content: "";
-  width: 76px;
-  height: 76px;
-  position: absolute;
-  left: 50%;
-  top: 9px;
-  transform: translateX(-50%);
-  border-radius: 20px;
-  background: url("favicon.svg") center / contain no-repeat;
-  box-shadow: 0 10px 24px rgba(15, 31, 56, .14);
-}
-
-.dev-core > span,
-.dev-core > strong {
-  display: none;
-}
-
-.dev-core small {
-  position: absolute;
-  left: 50%;
-  bottom: 7px;
-  margin: 0;
-  transform: translateX(-50%);
-  color: #52695a;
-  font-size: .49rem;
-  font-weight: 800;
-  letter-spacing: .10em;
-  white-space: nowrap;
 }
