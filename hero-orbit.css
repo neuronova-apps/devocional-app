@@ -113,15 +113,17 @@
 }
 
 .chip-right {
-  right: -50px;
-  bottom: 34px;
-  animation: innerFlat 44s linear infinite;
+  right: -18px;
+  top: 50%;
+  bottom: auto;
+  animation: innerMid 44s linear infinite;
 }
 
 .chip-left {
-  left: -42px;
-  bottom: 34px;
-  animation: innerFlat 44s linear infinite;
+  left: -18px;
+  top: 50%;
+  bottom: auto;
+  animation: innerMid 44s linear infinite;
 }
 
 .dev-core {
@@ -221,9 +223,9 @@
   to { transform: translateX(-50%) rotate(360deg); }
 }
 
-@keyframes innerFlat {
-  from { transform: rotate(0); }
-  to { transform: rotate(360deg); }
+@keyframes innerMid {
+  from { transform: translateY(-50%) rotate(0); }
+  to { transform: translateY(-50%) rotate(360deg); }
 }
 
 .hero h1 {
@@ -287,4 +289,6 @@
 @media (max-width: 380px) {
   .node-left { left: -36px; }
   .node-right { right: -36px; }
+  .chip-right { right: -12px; }
+  .chip-left { left: -12px; }
 }
