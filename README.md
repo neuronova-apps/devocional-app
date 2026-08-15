@@ -21,9 +21,39 @@ Mi Momento es una aplicación de Neuronova Apps orientada a devocionales, oraci�
 - creación, edición y eliminación de entradas del diario;
 - persistencia local versionada mediante `mimomento-local-v1`;
 - funcionamiento temporal en memoria si `localStorage` no está disponible;
-- accesibilidad específica para pestañas, formularios, modales, estados dinámicos y navegación por teclado.
+- accesibilidad específica para pestañas, formularios, modales, estados dinámicos y navegación por teclado;
+- cinco guías educativas públicas e indexables sobre uso responsable, devocionales, oraciones, seguimiento y diario.
 
 Los planes conceptuales pueden contemplar más días, pero el porcentaje actual se calcula únicamente sobre las 12 sesiones realmente publicadas.
+
+## Modelo editorial y de fuentes
+
+El contrato editorial se documenta en `docs/editorial-model.md`.
+
+Principios principales:
+
+- cada apoyo bíblico utiliza una referencia explícita de libro, capítulo y versículo o rango;
+- la web prioriza **paráfrasis editorial propia** y evita presentar una paráfrasis como cita literal;
+- si se incorpora texto literal de una traducción, debe identificarse la traducción y respetarse su licencia o condiciones de uso;
+- reflexión editorial, texto fuente y preguntas personales deben distinguirse entre sí;
+- las preguntas se formulan como invitaciones abiertas, no como una interpretación doctrinal universal;
+- no se prometen resultados espirituales, médicos o psicológicos por completar una sesión, mantener una racha o registrar una oración;
+- las métricas describen actividad de la aplicación y no se presentan como medida de crecimiento espiritual;
+- cualquier fuente secundaria externa futura debe documentar autor, título y referencia suficiente para su atribución.
+
+El ejemplo público basado en Eclesiastés 3:1 se presenta ahora como **paráfrasis editorial + referencia**, no como una cita bíblica sin traducción identificada.
+
+## Guías públicas
+
+Las guías son HTML estático. Leerlas no modifica `localStorage`, las oraciones, el diario ni el progreso.
+
+- `guia-mi-momento.html`: uso responsable de la demo, privacidad y lectura de métricas;
+- `como-usar-un-devocional.html`: diferencia entre referencia, paráfrasis, reflexión y pregunta personal;
+- `organizar-oraciones-personales.html`: títulos, categorías, estados y criterios de privacidad;
+- `seguimiento-de-oraciones.html`: notas fechadas, estado respondido y revisión del historial;
+- `diario-de-reflexion.html`: estructura de entradas, edición, eliminación y privacidad.
+
+Todas declaran `index, follow`, canonical propio, H1 único, navegación cruzada y acceso de regreso a la aplicación.
 
 ## Tecnología
 
@@ -48,6 +78,8 @@ Estas medidas no equivalen a una certificación WCAG. Continúan pendientes prue
 
 Oraciones, notas, reflexiones y progreso permanecen actualmente en el navegador. No existe cuenta, sincronización remota ni base de datos propia para esos registros.
 
+Las nuevas guías son páginas estáticas y no añaden almacenamiento personal ni tratamiento adicional de datos.
+
 Política pública:
 
 https://neuronova-apps.github.io/mimomento-app/privacy/
@@ -66,7 +98,7 @@ La rama `main` corresponde a la versión web pública. La rama `android` es actu
 
 ## Estructura principal
 
-- `index.html`: interfaz y estructura semántica;
+- `index.html`: interfaz, estructura semántica e integración de las guías;
 - `app.js`: navegación, persistencia, progreso, oraciones y diario;
 - `app-a11y.js`: teclado, foco, ARIA y modales;
 - `styles.css`: estilos base y responsive;
@@ -74,13 +106,21 @@ La rama `main` corresponde a la versión web pública. La rama `android` es actu
 - `progress.css`: estados de progreso y calendario;
 - `accessibility-local.css`: ajustes locales de accesibilidad;
 - `footer-ecosystem.css`: footer común del ecosistema;
+- `guide-cards.css`: tarjetas de recursos educativos en portada;
+- `resources.css`: estilos compartidos de las guías públicas;
+- `docs/editorial-model.md`: política editorial y de fuentes;
 - `privacy/`: política pública;
 - `assets/social/`: imagen social;
-- `sitemap.xml`: rutas indexables.
+- `sitemap.xml`: siete rutas públicas indexables.
+
+## Próxima etapa
+
+El siguiente trabajo previsto es **revisar y normalizar la presentación social** en las siete páginas públicas. El repositorio ya dispone de una imagen social 1200×630; la siguiente etapa debe verificar que Open Graph y Twitter utilicen de forma consistente ese activo, títulos, descripciones, dimensiones y textos alternativos.
 
 ## Enlaces
 
 - **Web:** https://neuronova-apps.github.io/mimomento-app/
+- **Guía de uso:** https://neuronova-apps.github.io/mimomento-app/guia-mi-momento.html
 - **Privacidad:** https://neuronova-apps.github.io/mimomento-app/privacy/
 - **Repositorio:** https://github.com/neuronova-apps/mimomento-app
 - **Ecosistema:** https://neuronova-apps.github.io/
