@@ -6,7 +6,7 @@ Mi Momento es una aplicación de Neuronova Apps orientada a devocionales, oraci�
 
 - **Web:** demo funcional en desarrollo activo.
 - **Publicación:** disponible mediante GitHub Pages.
-- **Android:** existe una rama `android` separada para el desarrollo móvil. Se considera trabajo en progreso y no una versión estable o publicada.
+- **Android:** existe una rama `android` preparatoria, pero todavía no contiene un proyecto Android nativo con Gradle, módulo `app` ni `AndroidManifest.xml`. Actualmente conserva una variante de la implementación web y no debe considerarse una aplicación móvil compilable.
 
 ## Funciones disponibles
 
@@ -62,7 +62,7 @@ python3 -m http.server 8000
 
 Después abre `http://localhost:8000`.
 
-La rama `main` corresponde a la versión web pública y la rama `android` mantiene el trabajo móvil separado.
+La rama `main` corresponde a la versión web pública. La rama `android` es actualmente preparatoria y requerirá crear la estructura Android nativa antes de poder compilarse como aplicación móvil.
 
 ## Estructura principal
 
