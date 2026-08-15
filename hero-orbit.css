@@ -257,3 +257,42 @@
   .node-left { left: -36px; }
   .node-right { right: -36px; }
 }
+
+/* Núcleo de Mi Momento alineado con la identidad de los núcleos NeuroNova */
+.dev-core {
+  overflow: hidden;
+  background:
+    linear-gradient(rgba(255,255,255,.88), rgba(255,255,255,.88)),
+    url("favicon.svg") center / 76px 76px no-repeat;
+}
+
+.dev-core::before {
+  content: "";
+  width: 76px;
+  height: 76px;
+  position: absolute;
+  left: 50%;
+  top: 9px;
+  transform: translateX(-50%);
+  border-radius: 20px;
+  background: url("favicon.svg") center / contain no-repeat;
+  box-shadow: 0 10px 24px rgba(15, 31, 56, .14);
+}
+
+.dev-core > span,
+.dev-core > strong {
+  display: none;
+}
+
+.dev-core small {
+  position: absolute;
+  left: 50%;
+  bottom: 7px;
+  margin: 0;
+  transform: translateX(-50%);
+  color: #52695a;
+  font-size: .49rem;
+  font-weight: 800;
+  letter-spacing: .10em;
+  white-space: nowrap;
+}
