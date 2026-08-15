@@ -1,4 +1,15 @@
 /* Footer de Mi Momento alineado con el ecosistema Neuronova */
+
+/* Identidad visual MM compartida entre favicon, header y footer */
+.brand-mark {
+  overflow: hidden;
+  border: 0;
+  background: url("favicon.svg") center / cover no-repeat;
+  color: transparent;
+  box-shadow: none;
+  font-size: 0;
+}
+
 .site-footer {
   padding: 0;
   border-top: 1px solid rgba(255,255,255,.08);
@@ -15,6 +26,16 @@
 
 .site-footer .footer-brand {
   max-width: 430px;
+}
+
+.site-footer .footer-brand::before {
+  content: "";
+  display: block;
+  width: 58px;
+  height: 58px;
+  margin-bottom: 16px;
+  border-radius: 17px;
+  background: url("favicon.svg") center / cover no-repeat;
 }
 
 .site-footer .footer-brand strong {
