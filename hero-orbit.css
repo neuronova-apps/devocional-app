@@ -261,3 +261,31 @@
 .dev-core{width:107px;height:107px;transform:rotate(-4deg)}
 @media(max-width:900px){.hero-visual{width:min(82vw,390px);min-height:390px;justify-self:center}}
 @media(max-width:700px){.hero-grid{gap:30px}.hero-visual{width:min(88vw,340px);min-height:340px}.dev-orbit-outer{width:286px;height:286px;margin:-143px 0 0 -143px}.dev-orbit-inner{width:186px;height:186px;margin:-93px 0 0 -93px}.dev-core{width:96px;height:96px;transform:rotate(-4deg)}}
+
+/* Tarjeta de métricas definitiva · Neuronova Apps */
+.hero .hero-metrics{
+  width:100%;
+  display:flex;
+  flex-wrap:nowrap;
+  gap:0;
+  margin-top:26px;
+  padding:16px 18px;
+  overflow:hidden;
+  border:1px solid rgba(64,82,73,.14);
+  border-radius:18px;
+  background:rgba(255,255,255,.42);
+  box-shadow:0 12px 32px rgba(66,78,69,.05)
+}
+.hero .hero-metrics>div{
+  flex:1 1 0;
+  min-width:0;
+  padding:0 18px 0 0;
+  margin:0 18px 0 0;
+  border-right:1px solid var(--line)
+}
+.hero .hero-metrics>div:last-child{padding-right:0;margin-right:0;border-right:0}
+.hero .hero-metrics strong,
+.hero .hero-metrics span{display:block}
+.hero .hero-metrics strong{color:var(--text);font-size:1.02rem;line-height:1.2}
+.hero .hero-metrics span{margin-top:4px;color:var(--muted);font-size:.72rem;font-weight:500;line-height:1.35}
+@media(max-width:700px){.hero .hero-metrics{padding:14px 15px}.hero .hero-metrics>div{padding-right:10px;margin-right:10px}.hero .hero-metrics strong{font-size:.96rem}.hero .hero-metrics span{font-size:.68rem}}
