@@ -6,7 +6,11 @@ Mi Momento es una aplicación de Neuronova Apps orientada a devocionales, oraci�
 
 - **Web:** demo funcional en desarrollo activo.
 - **Publicación:** disponible mediante GitHub Pages.
-- **Android:** existe una rama `android` preparatoria, pero todavía no contiene un proyecto Android nativo con Gradle, módulo `app` ni `AndroidManifest.xml`. Actualmente conserva una variante de la implementación web y no debe considerarse una aplicación móvil compilable.
+- **Android:** la rama `android` es preparatoria y todavía no contiene un proyecto Android nativo compilable con Gradle, módulo `app` y `AndroidManifest.xml`.
+
+## Alcance actual
+
+La versión pública permite utilizar una muestra funcional de devocionales, oraciones, diario y seguimiento local. Las métricas representan actividad dentro de la aplicación y no se presentan como medida de crecimiento espiritual. El proyecto no promete resultados espirituales, médicos o psicológicos por completar sesiones, mantener rachas o registrar oraciones.
 
 ## Funciones disponibles
 
@@ -22,85 +26,39 @@ Mi Momento es una aplicación de Neuronova Apps orientada a devocionales, oraci�
 - persistencia local versionada mediante `mimomento-local-v1`;
 - funcionamiento temporal en memoria si `localStorage` no está disponible;
 - accesibilidad específica para pestañas, formularios, modales, estados dinámicos y navegación por teclado;
-- cinco guías educativas públicas e indexables sobre uso responsable, devocionales, oraciones, seguimiento y diario.
+- cinco guías educativas públicas e indexables.
 
 Los planes conceptuales pueden contemplar más días, pero el porcentaje actual se calcula únicamente sobre las 12 sesiones realmente publicadas.
 
 ## Modelo editorial y de fuentes
 
-El contrato editorial se documenta en `docs/editorial-model.md`.
+El contrato editorial se documenta en `docs/editorial-model.md`. Cada apoyo bíblico utiliza una referencia explícita; la web prioriza paráfrasis editorial propia; reflexión, texto fuente y preguntas personales se distinguen entre sí; y cualquier cita literal futura debe identificar su traducción y respetar sus condiciones de uso.
 
-Principios principales:
-
-- cada apoyo bíblico utiliza una referencia explícita de libro, capítulo y versículo o rango;
-- la web prioriza **paráfrasis editorial propia** y evita presentar una paráfrasis como cita literal;
-- si se incorpora texto literal de una traducción, debe identificarse la traducción y respetarse su licencia o condiciones de uso;
-- reflexión editorial, texto fuente y preguntas personales deben distinguirse entre sí;
-- las preguntas se formulan como invitaciones abiertas, no como una interpretación doctrinal universal;
-- no se prometen resultados espirituales, médicos o psicológicos por completar una sesión, mantener una racha o registrar una oración;
-- las métricas describen actividad de la aplicación y no se presentan como medida de crecimiento espiritual;
-- cualquier fuente secundaria externa futura debe documentar autor, título y referencia suficiente para su atribución.
-
-El ejemplo público basado en Eclesiastés 3:1 se presenta ahora como **paráfrasis editorial + referencia**, no como una cita bíblica sin traducción identificada.
-
-## Guías públicas
-
-Las guías son HTML estático. Leerlas no modifica `localStorage`, las oraciones, el diario ni el progreso.
-
-- `guia-mi-momento.html`: uso responsable de la demo, privacidad y lectura de métricas;
-- `como-usar-un-devocional.html`: diferencia entre referencia, paráfrasis, reflexión y pregunta personal;
-- `organizar-oraciones-personales.html`: títulos, categorías, estados y criterios de privacidad;
-- `seguimiento-de-oraciones.html`: notas fechadas, estado respondido y revisión del historial;
-- `diario-de-reflexion.html`: estructura de entradas, edición, eliminación y privacidad.
-
-Todas declaran `index, follow`, canonical propio, H1 único, navegación cruzada y acceso de regreso a la aplicación.
-
-## Presentación social
-
-Las siete páginas públicas —portada, cinco guías y privacidad— utilizan el mismo activo:
-
-`assets/social/mimomento-social.png`
-
-El PNG tiene dimensiones **1200×630**. La metadata social pública está normalizada con:
-
-- `og:image` apuntando al PNG absoluto;
-- `og:image:type="image/png"`;
-- `og:image:width="1200"` y `og:image:height="630"`;
-- `og:image:alt` consistente;
-- `twitter:card="summary_large_image"`;
-- `twitter:image` y `twitter:image:alt` con el mismo recurso;
-- títulos y descripciones específicos para cada página.
-
-El favicon permanece separado del activo social.
+Las preguntas se formulan como invitaciones abiertas y no como interpretaciones doctrinales universales. Cualquier fuente secundaria externa futura debe documentar autor, título y referencia suficiente para su atribución.
 
 ## Tecnología
 
-La versión web utiliza:
-
-- HTML5;
-- CSS3;
-- JavaScript en el navegador;
-- `localStorage` para oraciones, diario y progreso;
-- GitHub Pages;
-- módulo de accesibilidad compartido de Neuronova Apps más una capa local específica.
-
-No requiere un proceso de compilación para la versión web actual.
+La versión web utiliza HTML5, CSS3, JavaScript en el navegador, `localStorage` para oraciones, diario y progreso, GitHub Pages y el módulo compartido de accesibilidad de Neuronova Apps más una capa local específica. No requiere un proceso de compilación para la versión web actual.
 
 ## Accesibilidad
 
-Mi Momento utiliza patrones `tablist`, `tab` y `tabpanel`, navegación con teclado entre pestañas, diálogos accesibles, gestión del foco, cierre con `Escape`, regiones de estado, validación accesible de formularios, foco visible y respeto por `prefers-reduced-motion`.
+Mi Momento utiliza patrones `tablist`, `tab` y `tabpanel`, navegación con teclado, diálogos accesibles, gestión del foco, cierre con `Escape`, regiones de estado, validación accesible de formularios, foco visible y respeto por `prefers-reduced-motion`.
 
-Estas medidas no equivalen a una certificación WCAG. Continúan pendientes pruebas manuales sistemáticas con lectores de pantalla, zoom, alto contraste y diferentes dispositivos.
+La superficie pública forma parte de la auditoría automática central del ecosistema. Estas medidas no equivalen a una certificación WCAG. Continúan pendientes pruebas manuales sistemáticas con lectores de pantalla, zoom, alto contraste y diferentes dispositivos.
 
 ## Privacidad
 
-Oraciones, notas, reflexiones y progreso permanecen actualmente en el navegador. No existe cuenta, sincronización remota ni base de datos propia para esos registros.
+Oraciones, notas, reflexiones y progreso permanecen actualmente en el navegador. No existe cuenta, sincronización remota ni base de datos propia para esos registros. Las guías son páginas estáticas y no añaden almacenamiento personal adicional.
 
-Las nuevas guías son páginas estáticas y no añaden almacenamiento personal ni tratamiento adicional de datos.
+Política pública: https://neuronova-apps.github.io/mimomento-app/privacy/
 
-Política pública:
+## Limitaciones conocidas
 
-https://neuronova-apps.github.io/mimomento-app/privacy/
+La biblioteca pública continúa siendo una muestra y no representa todavía el contenido definitivo previsto. El progreso se limita a las sesiones efectivamente publicadas. No existe sincronización entre dispositivos. La rama Android todavía no es un proyecto nativo compilable. La revisión manual completa de accesibilidad permanece pendiente.
+
+## Roadmap
+
+Las prioridades son ampliar y consolidar la biblioteca de contenidos y planes, mantener el modelo editorial y de fuentes, completar la documentación técnica de la arquitectura y los datos, profundizar las pruebas manuales de accesibilidad y definir una estrategia móvil antes de considerar una versión Android estable.
 
 ## Desarrollo local
 
@@ -110,30 +68,19 @@ cd mimomento-app
 python3 -m http.server 8000
 ```
 
-Después abre `http://localhost:8000`.
-
-La rama `main` corresponde a la versión web pública. La rama `android` es actualmente preparatoria y requerirá crear la estructura Android nativa antes de poder compilarse como aplicación móvil.
+Después abre `http://localhost:8000`. La rama `main` corresponde a la versión web pública y la rama `android` sigue siendo preparatoria.
 
 ## Estructura principal
 
-- `index.html`: interfaz, estructura semántica e integración de las guías;
+- `index.html`: interfaz, estructura semántica e integración de guías;
 - `app.js`: navegación, persistencia, progreso, oraciones y diario;
 - `app-a11y.js`: teclado, foco, ARIA y modales;
-- `styles.css`: estilos base y responsive;
-- `hero-orbit.css`: hero visual;
-- `progress.css`: estados de progreso y calendario;
-- `accessibility-local.css`: ajustes locales de accesibilidad;
-- `footer-ecosystem.css`: footer común del ecosistema;
-- `guide-cards.css`: tarjetas de recursos educativos en portada;
-- `resources.css`: estilos compartidos de las guías públicas;
+- hojas CSS: estilos base, progreso, accesibilidad local, footer y recursos;
 - `docs/editorial-model.md`: política editorial y de fuentes;
+- páginas HTML educativas: cinco guías públicas;
 - `privacy/`: política pública;
-- `assets/social/mimomento-social.png`: tarjeta social compartida de 1200×630;
-- `sitemap.xml`: siete rutas públicas indexables.
-
-## Próxima etapa
-
-El siguiente trabajo previsto es **consolidar la documentación del proyecto**: alcance actual, arquitectura web, formato de datos, privacidad, accesibilidad, modelo editorial, publicación y roadmap, eliminando duplicaciones y dejando una referencia técnica única para el estado del MVP.
+- `assets/social/mimomento-social.png`: tarjeta social 1200 × 630;
+- `sitemap.xml`: rutas públicas indexables.
 
 ## Enlaces
 
@@ -145,8 +92,12 @@ El siguiente trabajo previsto es **consolidar la documentación del proyecto**: 
 
 ## Neuronova Apps
 
-Mi Momento forma parte de **Neuronova Apps** y comparte con el resto del ecosistema criterios de diseño, accesibilidad, privacidad, documentación y publicación web.
+Mi Momento forma parte de Neuronova Apps y comparte con el resto del ecosistema criterios de diseño, accesibilidad, privacidad, documentación y publicación web, manteniendo su evolución funcional en un repositorio independiente.
 
 ## Autoría
 
 Proyecto personal e independiente desarrollado por Gabriel Berrospi dentro del ecosistema Neuronova Apps.
+
+## Última revisión
+
+2026-08-15
