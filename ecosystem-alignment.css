@@ -58,6 +58,7 @@ main .section h2,main .section-heading h2{font-size:var(--nv-h2);line-height:1.0
 main p{font-size:var(--nv-body);line-height:1.6}
 .hero .lead{font-size:var(--nv-lead);line-height:1.55}
 .eyebrow{font-size:var(--nv-eyebrow);line-height:1.2;letter-spacing:.14em}
+#modalContent>.eyebrow{color:#596b5f}
 .button,a.button,button.button{min-height:var(--nv-button);font-size:.9rem;line-height:1}
 :is(.hero-metrics,.metrics,.stats) strong{font-size:var(--nv-metric-value);line-height:1.2}
 :is(.hero-metrics,.metrics,.stats) span{font-size:var(--nv-metric-label);line-height:1.35}
