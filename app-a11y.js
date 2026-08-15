@@ -237,3 +237,28 @@
   syncAppTabs('home');
   syncPrayerTabs('active');
 })();
+
+(() => {
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    '@id': 'https://neuronova-apps.github.io/mimomento-app/#app',
+    name: 'Mi Momento',
+    url: 'https://neuronova-apps.github.io/mimomento-app/',
+    description: 'Demo web funcional de devocionales, oración y reflexión personal con progreso, oraciones y diario guardados localmente.',
+    applicationCategory: 'LifestyleApplication',
+    operatingSystem: 'Web',
+    inLanguage: 'es-PE',
+    applicationSuite: 'Neuronova Apps',
+    image: 'https://neuronova-apps.github.io/mimomento-app/assets/social/mimomento-social.png',
+    featureList: ['Cuatro planes de muestra', 'Doce sesiones disponibles', 'Registro local de oraciones', 'Diario de reflexiones', 'Progreso devocional local', 'Accesibilidad web reforzada'],
+    isPartOf: {'@id': 'https://neuronova-apps.github.io/#website'}
+  };
+  if (!document.querySelector('script[data-neuronova-schema="true"]')) {
+    const schema = document.createElement('script');
+    schema.type = 'application/ld+json';
+    schema.dataset.neuronovaSchema = 'true';
+    schema.textContent = JSON.stringify(structuredData);
+    document.head.appendChild(schema);
+  }
+})();
